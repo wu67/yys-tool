@@ -29,6 +29,11 @@ const router = new Router({
       name: 'equipAnalysis',
       path: '/equipAnalysis',
       component: () => import('@/pages/equipAnalysis.vue')
+    },
+    {
+      name: 'aboutThis',
+      path: '/aboutThis',
+      component: () => import('@/pages/aboutThis.vue')
     }
   ],
   scrollBehavior (to, from, savedPosition) {

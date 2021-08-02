@@ -45,6 +45,10 @@ export default {
         {
           name: '用户数据',
           path: 'userData',
+        },
+        {
+          name: '关于',
+          path: 'aboutThis'
         }
       ]
     }
