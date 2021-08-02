@@ -1,0 +1,147 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+import user from './user'
+
+Vue.use(Vuex)
+
+// import baseAPI from '@/http/index'
+import allHeroJSON from '@/assets/all_shishen.json'
+import damoJSON from '@/assets/damo.json'
+import equipJSON from '@/assets/equip.json'
+
+export default new Vuex.Store({
+  state: {
+    equipList: [],
+    allHeroList: [],
+    attrList: [
+      {
+        key: 'Speed',
+        name: '速度',
+      },
+      {
+        key: 'CritRate',
+        name: '暴击',
+      },
+      {
+        key: 'AttackRate',
+        name: '攻击加成',
+      },
+      {
+        key: 'CritPower',
+        name: '暴击伤害',
+      },
+      {
+        key: 'EffectHitRate',
+        name: '效果命中',
+      },
+      {
+        key: 'EffectResistRate',
+        name: '效果抵抗',
+      },
+      {
+        key: 'HpRate',
+        name: '生命加成',
+      },
+      {
+        key: 'DefenseRate',
+        name: '防御加成',
+      },
+      {
+        key: 'Attack',
+        name: '攻击',
+      },
+      {
+        key: 'Defense',
+        name: '防御',
+      },
+      {
+        key: 'Hp',
+        name: '生命',
+      }
+    ],
+    notPercentAttr: [
+      'Speed',
+      'Attack',
+      'Defense',
+      'Hp'
+    ],
+    notIncludedList: []
+  },
+  getters: {
+    allAttrList (state) {
+      return state.attrList
+    },
+    allAttrMap (state) {
+      return state.attrList.reduce((result, current) => {
+        result[`${current.key}`] = current.name
+        return result
+      }, {})
+    },
+    effectiveAttrList (state) {
+      return state.attrList.slice(0, 8)
+    },
+    equipMap (state) {
+      let result = {}
+      state.equipList.forEach(item => {
+        result[`${item.id}`] = item.name
+      })
+      return result
+    }
+  },
+  actions: {
+    getAllHeroData ({ commit }) {
+      if (allHeroJSON) {
+        const list = allHeroJSON.map(item => {
+          const result = {
+            name: item.name,
+            // 稀有度
+            rarity: item.level,
+            // id 唯一值
+            id: item.id
+          }
+
+          if (item.interactive) {
+            result.interactive = true
+          }
+          return result
+        })
+
+        commit('updateAllHeroName', list.concat(damoJSON))
+      }
+
+    },
+    getEquipData ({ commit }) {
+      let equipList = []
+      if (equipJSON) {
+        equipList = equipJSON.map(item => {
+          return {
+            id: item.id,
+            name: item.name
+          }
+        })
+      }
+      commit('updateEquipData', equipList)
+    }
+  },
+  mutations: {
+    updateEquipData (state, data) {
+      state.equipList = data
+    },
+    updateAllHeroName (state, data) {
+      state.allHeroList = data
+    },
+    // payload { index: num, value }. index: -1新增， -2整组替换，>-1目标值替换
+    updateNotIncluded (state, payload) {
+      if (payload.index === -1) {
+        state.notIncludedList.push(payload.value)
+      } else if (payload.index === -2) {
+        Vue.set(state, 'notIncludedList', payload.value)
+      } else {
+        Vue.set(state.notIncludedList, payload.index, payload.value)
+      }
+    }
+  },
+  modules: {
+    'user': user
+  }
+})
