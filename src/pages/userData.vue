@@ -159,17 +159,21 @@ export default {
           value: newUserData
         })
 
-        this.$store.commit('updateNotIncluded', {
-          index: index,
-          value: this.commonNotIncluded
-        })
         // 写入indexed DB
         this.updateUserData(index, newUserData)
-        this.updateUserNotIncluded(index,
-          {
-            id: newUserData.data.player.id,
+
+        if (index === -1) {
+          // 不是新增用户数据的话，不必更新未收录数据
+          this.$store.commit('updateNotIncluded', {
+            index: index,
             value: this.commonNotIncluded
           })
+          this.updateUserNotIncluded(index,
+            {
+              id: newUserData.data.player.id,
+              value: this.commonNotIncluded
+            })
+        }
       }
       fileReader.readAsText(file)
 
