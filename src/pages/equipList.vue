@@ -3,7 +3,6 @@
     <el-tabs v-model="currentUser"
              type="card"
              @tab-click="changeUser">
-<!--      <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>-->
       <el-tab-pane :label="user.data.player.name"
                    v-for="(user, userIndex) in user.userList"
                    :key="userIndex"></el-tab-pane>
@@ -201,9 +200,6 @@ export default {
       this.list = data.hero_equips
         .map(item => {
           const result = {
-            // ...item,
-            // base_attr: item.base_attr,
-            // random_attrs: item.random_attrs,
             id: item.id,
             single_attrs: [],
             born: item.born,
