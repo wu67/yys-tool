@@ -1,7 +1,15 @@
 <template>
   <div class="page-equip-analysis">
     <div class="herder">
-      <h2>满速套装分析</h2>
+      <div class="flex baseline">
+        <h2>满速套装分析</h2>
+        <div style="font-size: 12px;color: #999;margin: 0 10px;">所列速度均为副属性，二号位只显示双速，无速度不予显示</div>
+        <div class="analysis-value neck">&gt;13.5</div>
+        <div class="analysis-value full">&gt;15</div>
+        <div class="analysis-value rare">&gt;16.5</div>
+        <div class="analysis-value extreme">&gt;=17</div>
+        <div class="analysis-value european">&gt;=17.5</div>
+      </div>
       <h5>用于分析某一套装的速度短板，方便赌魂/爆肝</h5>
       <el-tabs v-model="currentUser"
                v-if="user.userList.length > 1"
@@ -24,28 +32,60 @@
         </div>
         <div class="position" v-for="(p, pIndex) in equip.position" :key="pIndex">
           <div class="flex analysis-item">
-<!--            <div v-for="(speed, speedIndex) in p" :key="speedIndex">{{ speed }}</div>-->
             <div>位置{{ transNumberToChinese(pIndex + 1) }}:&nbsp;</div>
             <div
               v-if="p.length > 0"
               class="analysis-value"
               :class="{
-                'neck': (pIndex !==1 && p[0].value  > 13) || (pIndex === 1 && p[0].value  > (57 + 13)),
-                'full': (pIndex !==1 && p[0].value  > 15) || (pIndex === 1 && p[0].value  > (57 + 15)),
-                'rare': (pIndex !==1 && p[0].value  > 16.5) || (pIndex === 1 && p[0].value  > (57 + 16.5)),
-                'extreme': (pIndex !==1 && p[0].value  > 17) || (pIndex === 1 && p[0].value  > (57 + 17)),
-                'european': (pIndex !==1 && p[0].value  > 17.5) || (pIndex === 1 && p[0].value  > (57 + 17.5)),
+                'neck'    : (pIndex !==1 && p[0].value > 13.5)  || (pIndex === 1 && p[0].value > (57 + 13.5)),
+                'full'    : (pIndex !==1 && p[0].value > 15)    || (pIndex === 1 && p[0].value > (57 + 15)),
+                'rare'    : (pIndex !==1 && p[0].value > 16.5)  || (pIndex === 1 && p[0].value > (57 + 16.5)),
+                'extreme' : (pIndex !==1 && p[0].value >= 17)   || (pIndex === 1 && p[0].value >= (57 + 17)),
+                'european': (pIndex !==1 && p[0].value >= 17.5) || (pIndex === 1 && p[0].value >= (57 + 17.5)),
               }"
             >
-              <!-- 二号位置仅显示双速的 -->
-              <div v-if="pIndex === 1 && p[0].value > 59">{{ (p[0].value - 57).toFixed(2) }}</div>
-              <div v-else-if="pIndex !== 1 && p[0].value > 0">{{ p[0].value.toFixed(2) }}</div>
+              <el-tooltip effect="dark"
+                          placement="top"
+                          :content="'主 ' + allAttrMap[`${p[0].mainAttr.type}`]"
+                          :disabled="!(p.length > 0 && (pIndex === 3 || pIndex === 5) && p[0].value > 15)">
+                <!-- 二号位置仅显示双速的 -->
+                <div v-if="pIndex === 1 && p[0].value > 59">{{ (p[0].value - 57).toFixed(2) }}</div>
+                <div v-else-if="pIndex !== 1 && p[0].value > 0">{{ p[0].value.toFixed(2) }}</div>
+              </el-tooltip>
             </div>
 
-            <div
-              v-if="p.length > 0 && (pIndex === 3 || pIndex === 5) && p[0].value > 15"
-              class="analysis-main-attr"
-            >{{ allAttrNickMap[`${p[0].mainAttr.type}`] }}</div>
+            <template v-if="p.length > 1 && (pIndex !== 1 && p[1].value  > 15 || (pIndex === 1 && p[1].value > (57 + 15)))">
+              <el-tooltip effect="dark"
+                          placement="top"
+                          :content="'2速 主' + allAttrMap[`${p[1].mainAttr.type}`] + ', ' + p[1].value.toFixed(2) + '速'">
+                <div class="analysis-value"
+                     :class="{
+                       'neck'    : (pIndex !==1 && p[1].value > 13.5)  || (pIndex === 1 && p[1].value > (57 + 13.5)),
+                       'full'    : (pIndex !==1 && p[1].value > 15)    || (pIndex === 1 && p[1].value > (57 + 15)),
+                       'rare'    : (pIndex !==1 && p[1].value > 16.5)  || (pIndex === 1 && p[1].value > (57 + 16.5)),
+                       'extreme' : (pIndex !==1 && p[1].value >= 17)   || (pIndex === 1 && p[1].value >= (57 + 17)),
+                       'european': (pIndex !==1 && p[1].value >= 17.5) || (pIndex === 1 && p[1].value >= (57 + 17.5)),
+                     }">&nbsp;&nbsp;
+                </div>
+              </el-tooltip>
+            </template>
+
+            <template v-if="p.length > 2 && (pIndex !== 1 && p[2].value  > 15 || (pIndex === 1 && p[2].value > (57 + 15)))">
+              <el-tooltip effect="dark"
+                          placement="top"
+                          :content="'3速 主' + allAttrMap[`${p[2].mainAttr.type}`] + ', ' + p[2].value.toFixed(2) + '速'">
+                <div class="analysis-value"
+                     :class="{
+                       'neck'    : (pIndex !==1 && p[2].value > 13.5)  || (pIndex === 1 && p[2].value > (57 + 13.5)),
+                       'full'    : (pIndex !==1 && p[2].value > 15)    || (pIndex === 1 && p[2].value > (57 + 15)),
+                       'rare'    : (pIndex !==1 && p[2].value > 16.5)  || (pIndex === 1 && p[2].value > (57 + 16.5)),
+                       'extreme' : (pIndex !==1 && p[2].value >= 17)   || (pIndex === 1 && p[2].value >= (57 + 17)),
+                       'european': (pIndex !==1 && p[2].value >= 17.5) || (pIndex === 1 && p[2].value >= (57 + 17.5)),
+                     }">&nbsp;.&nbsp;
+                </div>
+              </el-tooltip>
+            </template>
+
           </div>
         </div>
       </el-card>
@@ -97,7 +137,7 @@ export default {
       'notPercentAttr'
     ]),
     ...mapGetters([
-      'allAttrNickMap',
+      'allAttrMap',
     ])
   },
   watch: {},
@@ -214,7 +254,7 @@ export default {
   }
 
   .el-card__body {
-    padding: 20px 10px 10px;
+    padding: 20px 0 10px 10px;
   }
 }
 </style>
@@ -236,13 +276,10 @@ export default {
 
 .equip-item {
   width: 140px;
+  max-width: 150px;
   min-height: 140px;
-  margin-right: 8px;
+  margin-right: 12px;
   margin-bottom: 10px;
-
-  & + .equip-item {
-    //margin
-  }
 }
 
 .analysis-item {
@@ -252,6 +289,11 @@ export default {
 .analysis-value {
   padding: 0 4px;
   border-radius: 4px;
+  cursor: default;
+
+  & + .analysis-value {
+    margin-left: 2px;
+  }
 }
 
 .analysis-main-attr {
