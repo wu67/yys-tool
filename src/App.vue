@@ -38,10 +38,10 @@ export default {
           name: '御魂列表',
           path: 'equipList',
         },
-        // {
-        //   name: '御魂分析',
-        //   path: 'equipAnalysis'
-        // },
+        {
+          name: '御魂分析',
+          path: 'equipAnalysis'
+        },
         {
           name: '用户数据',
           path: 'userData',
