@@ -57,7 +57,7 @@ export default {
     this.$store.dispatch('getAllHeroData')
     this.$store.dispatch('getEquipData')
     this.getUserData().then(userList => {
-      if (userList.length < 1) {
+      if (userList.length < 1 && this.$route.fullPath.indexOf('aboutThis') === -1) {
         this.loading = false
         this.onMenuSelect('userData')
         this.currentNav = 'userData'
@@ -92,6 +92,7 @@ body {
 #app {
   height: 100%;
   width: 100%;
+  min-width: 100vw;
   position: relative;
 }
 
@@ -99,5 +100,6 @@ body {
   padding: 0 calc((100% - 1600px) / 2);
   background-color: #545c64;
   margin-bottom: 10px;
+  width: 100%;
 }
 </style>

@@ -30,9 +30,17 @@
               v-if="p.length > 0"
               class="analysis-value"
               :class="{
-                'full': (pIndex !==1 && p[0] > 15) || (pIndex === 1 && p[0] > (57 + 15))
+                'neck': (pIndex !==1 && p[0] > 13) || (pIndex === 1 && p[0] > (57 + 13)),
+                'full': (pIndex !==1 && p[0] > 15) || (pIndex === 1 && p[0] > (57 + 15)),
+                'rare': (pIndex !==1 && p[0] > 16.5) || (pIndex === 1 && p[0] > (57 + 16.5)),
+                'extreme': (pIndex !==1 && p[0] > 17) || (pIndex === 1 && p[0] > (57 + 17)),
+                'european': (pIndex !==1 && p[0] > 17.5) || (pIndex === 1 && p[0] > (57 + 17.5)),
               }"
-            >{{ p[0].toFixed(2) }}</div>
+            >
+              <!-- 二号位置仅显示双速的 -->
+              <div v-if="pIndex === 1 && p[0] > 59">{{ (p[0] - 57).toFixed(2) }}</div>
+              <div v-else-if="pIndex !== 1">{{ p[0].toFixed(2) }}</div>
+            </div>
           </div>
         </div>
       </el-card>
@@ -227,13 +235,35 @@ export default {
 
 .analysis-value {
   padding: 0 4px;
+  border-radius: 4px;
+}
+
+.neck {
+  background-color: #E1FFFF;
 }
 
 .full {
+  background-color: Green;
   color: #fff;
   font-weight: 500;
-  background-color: #67C23A;
-  border-radius: 4px;
+}
+
+.rare {
+  background-color: DarkOrange;
+  color: #fff;
+  font-weight: 500;
+}
+
+.extreme {
+  background-color: OrangeRed;
+  color: #fff;
+  font-weight: 500;
+}
+
+.european {
+  background-color: #9400D3;
+  color: #fff;
+  font-weight: 500;
 }
 
 .important {
