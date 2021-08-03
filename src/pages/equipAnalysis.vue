@@ -30,17 +30,22 @@
               v-if="p.length > 0"
               class="analysis-value"
               :class="{
-                'neck': (pIndex !==1 && p[0] > 13) || (pIndex === 1 && p[0] > (57 + 13)),
-                'full': (pIndex !==1 && p[0] > 15) || (pIndex === 1 && p[0] > (57 + 15)),
-                'rare': (pIndex !==1 && p[0] > 16.5) || (pIndex === 1 && p[0] > (57 + 16.5)),
-                'extreme': (pIndex !==1 && p[0] > 17) || (pIndex === 1 && p[0] > (57 + 17)),
-                'european': (pIndex !==1 && p[0] > 17.5) || (pIndex === 1 && p[0] > (57 + 17.5)),
+                'neck': (pIndex !==1 && p[0].value  > 13) || (pIndex === 1 && p[0].value  > (57 + 13)),
+                'full': (pIndex !==1 && p[0].value  > 15) || (pIndex === 1 && p[0].value  > (57 + 15)),
+                'rare': (pIndex !==1 && p[0].value  > 16.5) || (pIndex === 1 && p[0].value  > (57 + 16.5)),
+                'extreme': (pIndex !==1 && p[0].value  > 17) || (pIndex === 1 && p[0].value  > (57 + 17)),
+                'european': (pIndex !==1 && p[0].value  > 17.5) || (pIndex === 1 && p[0].value  > (57 + 17.5)),
               }"
             >
               <!-- 二号位置仅显示双速的 -->
-              <div v-if="pIndex === 1 && p[0] > 59">{{ (p[0] - 57).toFixed(2) }}</div>
-              <div v-else-if="pIndex !== 1">{{ p[0].toFixed(2) }}</div>
+              <div v-if="pIndex === 1 && p[0].value > 59">{{ (p[0].value - 57).toFixed(2) }}</div>
+              <div v-else-if="pIndex !== 1 && p[0].value > 0">{{ p[0].value.toFixed(2) }}</div>
             </div>
+
+            <div
+              v-if="p.length > 0 && (pIndex === 3 || pIndex === 5) && p[0].value > 15"
+              class="analysis-main-attr"
+            >{{ allAttrNickMap[`${p[0].mainAttr.type}`] }}</div>
           </div>
         </div>
       </el-card>
@@ -50,7 +55,8 @@
 
 <script>
 import {
-  mapState
+  mapState,
+  mapGetters
 } from 'vuex'
 import mathjs from '@/utils/mathjs'
 import baseMixin from '@/mixin'
@@ -89,6 +95,9 @@ export default {
       'user',
       'equipList',
       'notPercentAttr'
+    ]),
+    ...mapGetters([
+      'allAttrNickMap',
     ])
   },
   watch: {},
@@ -156,12 +165,15 @@ export default {
         temp.forEach(item => {
           if (item.suit_id === equip.id) {
             let speed = this.getAttrSum(item, attrName)
-            finalEquipData.position[item.pos].push(speed)
+            finalEquipData.position[item.pos].push({
+              mainAttr: item.mainAttr,
+              value: speed
+            })
           }
         })
 
         finalEquipData.position.forEach(item => {
-          item.sort((a, b) => (b - a))
+          item.sort((a, b) => (b.value - a.value))
         })
         return finalEquipData
       })
@@ -198,7 +210,11 @@ export default {
 <style lang="scss">
 .page-equip-analysis {
   .el-card__header {
-    padding: 10px 20px 6px;
+    padding: 10px 10px 6px;
+  }
+
+  .el-card__body {
+    padding: 20px 10px 10px;
   }
 }
 </style>
@@ -236,6 +252,11 @@ export default {
 .analysis-value {
   padding: 0 4px;
   border-radius: 4px;
+}
+
+.analysis-main-attr {
+  margin-left: 4px;
+  font-weight: 500;
 }
 
 .neck {
