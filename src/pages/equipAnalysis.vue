@@ -12,11 +12,11 @@
       </div>
       <h5>用于分析某一套装的速度短板，方便赌魂/爆肝</h5>
       <el-tabs v-model="currentUser"
-               v-if="user.userList.length > 1"
+               v-if="userList.length > 1"
                type="card"
                @tab-click="changeUser">
         <el-tab-pane :label="u.data.player.name"
-                     v-for="(u, userIndex) in user.userList"
+                     v-for="(u, userIndex) in userList"
                      :key="userIndex"></el-tab-pane>
       </el-tabs>
     </div>
@@ -32,7 +32,7 @@
         </div>
         <div class="position" v-for="(p, pIndex) in equip.position" :key="pIndex">
           <div class="flex analysis-item">
-            <div>位置{{ transNumberToChinese(pIndex + 1) }}:&nbsp;</div>
+            <div>位置{{ transNumberToChinese(pIndex + 1) }}&nbsp;</div>
             <div
               v-if="p.length > 0"
               class="analysis-value"
@@ -81,7 +81,7 @@
                        'rare'    : (pIndex !==1 && p[2].value > 16.5)  || (pIndex === 1 && p[2].value > (57 + 16.5)),
                        'extreme' : (pIndex !==1 && p[2].value >= 17)   || (pIndex === 1 && p[2].value >= (57 + 17)),
                        'european': (pIndex !==1 && p[2].value >= 17.5) || (pIndex === 1 && p[2].value >= (57 + 17.5)),
-                     }">&nbsp;.&nbsp;
+                     }">&nbsp;&nbsp;
                 </div>
               </el-tooltip>
             </template>
@@ -98,7 +98,7 @@ import {
   mapState,
   mapGetters
 } from 'vuex'
-import mathjs from '@/utils/mathjs'
+import util from '@/utils/index'
 import baseMixin from '@/mixin'
 
 export default {
@@ -132,12 +132,14 @@ export default {
   },
   computed: {
     ...mapState([
-      'user',
       'equipList',
       'notPercentAttr'
     ]),
     ...mapGetters([
       'allAttrMap',
+    ]),
+    ...mapGetters('user', [
+      'userList'
     ])
   },
   watch: {},
@@ -148,10 +150,11 @@ export default {
   updated () {},
   beforeDestroy () {},
   methods: {
+    transNumberToChinese (value) { return util.transNumberToChinese(value) },
     initData (attrName = 'Speed') {
       this.loading = true
       this.aData = this.equipList.map(equip => {
-        let finalEquipData = {
+        const finalEquipData = {
           ...equip,
           // 6个位置，按属性排序
           position: [
@@ -163,51 +166,12 @@ export default {
             [],
           ]
         }
-        const userEquips = this.user.userList[parseInt(this.currentUser)].data.hero_equips
-        let temp = userEquips.map(item => {
-          const result = {
-            id: item.id,
-            single_attrs: [],
-            born: item.born,
-            level: item.level,
-            pos: item.pos,
-            quality: item.quality,
-            suit_id: item.suit_id,
-            mainAttr: {
-              type: item.base_attr.type
-            }
-          }
-          // 处理副属性
-          for (const rAttr of item.random_attrs) {
-            if (this.notPercentAttr.indexOf(rAttr.type) === -1) {
-              result[`${rAttr.type}`] = this.multiply(rAttr.value)
-            } else {
-              result[`${rAttr.type}`] = rAttr.value
-            }
-          }
 
-          // 处理主属性
-          if (this.notPercentAttr.indexOf(item.base_attr.type) === -1) {
-            result.mainAttr.value = this.multiply(item.base_attr.value)
-          } else {
-            result.mainAttr.value = item.base_attr.value
-          }
-
-          // 处理首领魂的固定属性 全是加成百分比属性. 当前版本最多只会有1条固定属性
-          if (item.single_attrs.length > 0) {
-            result.single_attrs.push({
-              type: item.single_attrs[0].type,
-              value: this.multiply(item.single_attrs[0].value)
-            })
-          }
-          return result
-        })
-        temp.forEach(item => {
+        this.userList[parseInt(this.currentUser)].data.hero_equips.forEach(item => {
           if (item.suit_id === equip.id) {
-            let speed = this.getAttrSum(item, attrName)
             finalEquipData.position[item.pos].push({
-              mainAttr: item.mainAttr,
-              value: speed
+              mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
+              value: util.getAttrSum(item, attrName)
             })
           }
         })
@@ -226,23 +190,8 @@ export default {
         this.initData()
       })
     },
-    // 计算单个御魂中某个属性的总值
-    getAttrSum (equip, attrName) {
-      let sum = 0
-      sum += equip[`${attrName}`] || 0
-
-      // 主属性
-      if (equip.mainAttr.type === attrName) {
-        sum = sum + equip.mainAttr.value
-      }
-      // （首领魂）固定属性
-      if (equip.single_attrs.length > 0 && equip.single_attrs[0].type === attrName) {
-        sum = sum + equip.single_attrs[0].value
-      }
-      return sum
-    },
     multiply (value, ratio = 100) {
-      return parseFloat(mathjs.chain(value).multiply(ratio).done().toPrecision(12))
+      return util.multiply(value, ratio)
     }
   }
 }
@@ -275,8 +224,8 @@ export default {
 }
 
 .equip-item {
-  width: 140px;
-  max-width: 150px;
+  width: 144px;
+  //max-width: 150px;
   min-height: 140px;
   margin-right: 12px;
   margin-bottom: 10px;

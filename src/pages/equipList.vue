@@ -4,7 +4,7 @@
              type="card"
              @tab-click="changeUser">
       <el-tab-pane :label="user.data.player.name"
-                   v-for="(user, userIndex) in user.userList"
+                   v-for="(user, userIndex) in userList"
                    :key="userIndex"></el-tab-pane>
     </el-tabs>
     <div class="flex" style="margin-bottom: 10px;">
@@ -22,10 +22,8 @@
         </el-checkbox-group>
       </div>
     </div>
-    <!--      v-if="list.length > 0"-->
     <div
       style="">
-<!--        height="100%"-->
       <el-table
         :data="computedList"
         @sort-change="onTableSortChange"
@@ -121,7 +119,7 @@ import {
   mapState,
   mapGetters
 } from 'vuex'
-import mathjs from '@/utils/mathjs'
+import util from '@/utils/index'
 import baseMixin from '@/mixin'
 
 export default {
@@ -144,7 +142,6 @@ export default {
   },
   computed: {
     ...mapState([
-      'user',
       'equipList',
       'notPercentAttr'
     ]),
@@ -153,6 +150,9 @@ export default {
       'allAttrMap',
       'allAttrList',
       'effectiveAttrList'
+    ]),
+    ...mapGetters('user', [
+      'userList'
     ]),
     // 将数据分页。动辄上千行数据，全部渲染的话，会比较耗时
     computedList () {
@@ -177,6 +177,7 @@ export default {
   updated () {},
   beforeDestroy () {},
   methods: {
+    transNumberToChinese (value) { return util.transNumberToChinese(value) },
     changeUser () {
       this.$nextTick(() => {
         this.initData()
@@ -195,48 +196,9 @@ export default {
       this.initData()
     },
     initData () {
-      const data = this.user.userList[parseInt(this.currentUser)].data
+      const data = this.userList[parseInt(this.currentUser)].data
 
       this.list = data.hero_equips
-        .map(item => {
-          const result = {
-            id: item.id,
-            single_attrs: [],
-            born: item.born,
-            level: item.level,
-            pos: item.pos,
-            quality: item.quality,
-            suit_id: item.suit_id,
-            mainAttr: {
-              type: item.base_attr.type
-            }
-          }
-
-          // 处理副属性
-          for (const rAttr of item.random_attrs) {
-            if (this.notPercentAttr.indexOf(rAttr.type) === -1) {
-              result[`${rAttr.type}`] = this.multiply(rAttr.value)
-            } else {
-              result[`${rAttr.type}`] = rAttr.value
-            }
-          }
-
-          // 处理主属性
-          if (this.notPercentAttr.indexOf(item.base_attr.type) === -1) {
-            result.mainAttr.value = this.multiply(item.base_attr.value)
-          } else {
-            result.mainAttr.value = item.base_attr.value
-          }
-
-          // 处理首领魂的固定属性 全是加成百分比属性. 当前版本最多只会有1条固定属性
-          if (item.single_attrs.length > 0) {
-            result.single_attrs.push({
-              type: item.single_attrs[0].type,
-              value: this.multiply(item.single_attrs[0].value)
-            })
-          }
-          return result
-        })
         .filter(item => (this.checkAttrList.indexOf(item.mainAttr.type) !== -1))
         .sort((a, b) => b.born - a.born)
 
@@ -250,36 +212,21 @@ export default {
 
       if (order === 'descending') {
         // 从高到低
-        sortMethod = (a, b) => this.getAttrSum(b, prop) - this.getAttrSum(a, prop)
+        sortMethod = (a, b) => util.getAttrSum(b, prop) - util.getAttrSum(a, prop)
 
       } else if (order === 'ascending') {
         // 从低到高
-        sortMethod = (a, b) => this.getAttrSum(a, prop) - this.getAttrSum(b, prop)
+        sortMethod = (a, b) => util.getAttrSum(a, prop) - util.getAttrSum(b, prop)
       } else {
         // 此时order为null
       }
       this.list = this.list.sort(sortMethod).map(item => item)
     },
-    // 计算单个御魂中某个属性的总值
-    getAttrSum (equip, attrName) {
-      let sum = 0
-      sum += equip[`${attrName}`] || 0
-
-      // 主属性
-      if (equip.mainAttr.type === attrName) {
-        sum = sum + equip.mainAttr.value
-      }
-      // （首领魂）固定属性
-      if (equip.single_attrs.length > 0 && equip.single_attrs[0].type === attrName) {
-        sum = sum + equip.single_attrs[0].value
-      }
-      return sum
-    },
     transAttrToName (attr) {
       return this.allAttrMap[attr]
     },
     multiply (value, ratio = 100) {
-      return parseFloat(mathjs.chain(value).multiply(ratio).done().toPrecision(12))
+      return util.multiply(value, ratio)
     }
   }
 }

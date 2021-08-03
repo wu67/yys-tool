@@ -1,5 +1,4 @@
 import Dexie from 'dexie'
-import NZHCN from 'nzh/cn'
 
 export default {
   filters: {
@@ -36,10 +35,8 @@ export default {
     this.connectDB()
   },
   methods: {
-    transNumberToChinese (num) {
-      return NZHCN.encodeS(num)
-    },
     connectDB () {
+      // todo db面向对象重构。目前会重复创建连接，完全面条式的面向过程代码
       this.db = new Dexie('yyx-tool')
 
       if (this.db.user && this.db.not_included) {

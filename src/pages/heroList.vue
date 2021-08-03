@@ -4,7 +4,7 @@
       :show.sync="dialogSetNotIncludedVisible"
       v-if="dialogSetNotIncludedVisible"
       :notIncluded="notIncludedList[currentEditNotIncludedUserIndex]"
-      :userName="user.userList[currentEditNotIncludedUserIndex].data.player.name"
+      :userName="userList[currentEditNotIncludedUserIndex].data.player.name"
       @change-not-included="changeNotIncluded"
     ></dialogSetNotIncluded>
     <div class="flex between" style="margin-bottom: 8px;">
@@ -69,7 +69,7 @@
 
       <el-table-column
         align="center"
-        v-for="(user, userIndex) in user.userList"
+        v-for="(user, userIndex) in userList"
         :label="`${user.data.player.name}`"
         :key="`userColumn${userIndex}`">
         <template slot="header">
@@ -198,9 +198,10 @@ export default {
     ...mapState([
       'allHeroList',
       'notIncludedList',
-      'user',
     ]),
-    ...mapGetters([]),
+    ...mapGetters('user', [
+      'userList'
+    ]),
     computedShardsList () {
       let result = []
       if (this.checkList.indexOf('INTERACTIVE') !== -1) {
@@ -246,7 +247,7 @@ export default {
           obj.interactive = true
         }
         // obj.shards = []
-        this.user.userList.forEach((user, index) => {
+        this.userList.forEach((user, index) => {
           // 处理持有的碎片和召唤所需碎片数
           user.data.hero_book_shards.forEach((hero) => {
             if (obj.id == hero.hero_id) {
@@ -315,7 +316,7 @@ export default {
         value: array
       })
       this.updateUserNotIncluded(this.currentEditNotIncludedUserIndex, {
-        id: this.user.userList[this.currentEditNotIncludedUserIndex].data.player.id,
+        id: this.userList[this.currentEditNotIncludedUserIndex].data.player.id,
         value: array
       }).then(() => {
         this.$message.success(`设置未收录成功`)
