@@ -11,7 +11,8 @@ export default {
     // eslint-disable-next-line
     userList (state, getters, rootState) {
       return state.userList.map(user => {
-        user.data.hero_equips = user.data.hero_equips.map(item => {
+        let newUser = JSON.parse(JSON.stringify(user))
+        newUser.data.hero_equips = user.data.hero_equips.map(item => {
 
           const result = {
             id: item.id,
@@ -53,7 +54,7 @@ export default {
           return result
         })
 
-        return user
+        return newUser
       })
     }
   },
