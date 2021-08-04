@@ -19,6 +19,11 @@
                      v-for="(u, userIndex) in userList"
                      :key="userIndex"></el-tab-pane>
       </el-tabs>
+      <div class="flex center">
+        <div v-for="(suit, suitIndex) in scatteredSuit" :key="suitIndex">
+          <div>散件{{ transNumberToChinese(suitIndex + 1) }}速: {{ suit.toFixed(3) }}; &nbsp;</div>
+        </div>
+      </div>
     </div>
     <div class="flex wrap" v-loading="loading">
       <el-card
@@ -127,6 +132,8 @@ export default {
       ],
       currentUser: 0,
       aData: [],
+      // 散件速度计算
+      scatteredSuit: [],
       loading: false
     }
   },
@@ -153,6 +160,19 @@ export default {
     transNumberToChinese (value) { return util.transNumberToChinese(value) },
     initData (attrName = 'Speed') {
       this.loading = true
+      // 散件
+      let scatteredSuit = {
+        name: '散件',
+        id: '-111',
+        position: [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      }
       this.aData = this.equipList.map(equip => {
         const finalEquipData = {
           ...equip,
@@ -173,14 +193,35 @@ export default {
               mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
               value: util.getAttrSum(item, attrName)
             })
+            scatteredSuit.position[item.pos].push({
+              name: equip.name,
+              mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
+              value: util.getAttrSum(item, attrName)
+            })
           }
         })
 
         finalEquipData.position.forEach(item => {
           item.sort((a, b) => (b.value - a.value))
         })
+        scatteredSuit.position.forEach(item => {
+          item.sort((a, b) => (b.value - a.value))
+        })
         return finalEquipData
       })
+
+      scatteredSuit.position = scatteredSuit.position.map(p => {
+        return p.length > 4 ? p.slice(0, 4) : p
+      })
+      this.aData.unshift(scatteredSuit)
+      // 散件总速度计算
+      this.scatteredSuit = scatteredSuit.position.reduce((total, current) => {
+        total[0] = (current[0].value || 0) + (total[0] || 0)
+        total[1] = (current[1].value || 0) + (total[1] || 0)
+        total[2] = (current[2].value || 0) + (total[2] || 0)
+        // total[3] = (current[3].value || 0) + (total[3] || 0)
+        return total
+      }, [])
       setTimeout(() => {
         this.loading = false
       }, 500)
