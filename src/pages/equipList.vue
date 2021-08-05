@@ -1,25 +1,75 @@
 <template>
   <div class="page-equip-list">
     <el-tabs v-model="currentUser"
+             size="small"
              type="card"
              @tab-click="changeUser">
       <el-tab-pane :label="user.data.player.name"
                    v-for="(user, userIndex) in userList"
                    :key="userIndex"></el-tab-pane>
     </el-tabs>
-    <div class="flex" style="margin-bottom: 10px;">
+    <div class="flex" style="margin-bottom: 8px;">
       <div class="flex">
         <div>主属性：</div>
         <el-checkbox label="all"
                      v-model="checkAllAttr"
                      @change="handleCheckAllAttrChange"
-                     :indeterminate="isIndeterminateAllAttr">全部</el-checkbox>&nbsp;
+                     :indeterminate="isIndeterminateAllAttr">全部&nbsp;&nbsp;</el-checkbox>&nbsp;
         <el-checkbox-group @change="handleCheckedAttrChange" v-model="checkAttrList">
           <el-checkbox
             v-for="item in allAttrList"
             :label="item.key"
             :key="item.key">{{ item.name }}</el-checkbox>
         </el-checkbox-group>
+      </div>
+    </div>
+    <div class="flex" style="margin-bottom: 8px;">
+      <div class="flex">
+        <div>等级：</div>
+        <el-checkbox label="all"
+                     v-model="checkAllLevel"
+                     @change="handleCheckAllLevelChange"
+                     :indeterminate="isIndeterminateAllLevel">全部&nbsp;&nbsp;</el-checkbox>&nbsp;
+        <el-checkbox-group @change="handleCheckedLevelChange" v-model="checkLevelList">
+          <el-checkbox
+            v-for="item in 16"
+            :label="item - 1"
+            :key="item - 1">{{ item - 1 }}级</el-checkbox>
+        </el-checkbox-group>
+      </div>
+    </div>
+    <div class="flex" style="margin-bottom: 8px;">
+      <div class="flex">
+        <div>位置：</div>
+        <el-checkbox label="all"
+                     v-model="checkAllPosition"
+                     @change="handleCheckAllPositionChange"
+                     :indeterminate="isIndeterminateAllPosition">全部&nbsp;&nbsp;</el-checkbox>&nbsp;
+        <el-checkbox-group @change="handleCheckedPositionChange" v-model="checkPositionList">
+          <el-checkbox
+            v-for="item in 6"
+            :label="item - 1"
+            :key="item">{{ transNumberToChinese(item) }}号位</el-checkbox>
+        </el-checkbox-group>
+      </div>
+      <div class="flex" style="margin-left: 60px;">
+        <div>种类：</div>
+         <el-select
+           v-if="equipList.length > 1"
+           v-model="checkEquipType"
+           clearable
+           size="mini"
+           placeholder="可选择过滤种类"
+           no-data-text="全部"
+           @change="initData"
+         >
+          <el-option
+            v-for="item in equipList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </div>
     </div>
     <div
@@ -132,9 +182,23 @@ export default {
   data () {
     return {
       currentUser: 0,
+      // 主属性过滤相关
       checkAllAttr: true,
       isIndeterminateAllAttr: false,
       checkAttrList: [],
+      // 主属性过滤相关 end
+      // 等级过滤相关
+      checkAllLevel: true,
+      isIndeterminateAllLevel: false,
+      checkLevelList: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      // 等级过滤相关 end
+      // 位置过滤相关
+      checkAllPosition: true,
+      isIndeterminateAllPosition: false,
+      checkPositionList: [0, 1, 2, 3, 4, 5],
+      // 位置过滤相关 end
+      checkEquipType: undefined,
+      // 被过滤过的数据，未分页过的。
       list: [],
       currentPage: 1,
       pageSize: 10
@@ -172,6 +236,7 @@ export default {
   watch: {},
   created () {
     this.checkAttrList = this.allAttrList.map(item => item.key)
+    // this.checkEquipType = this.equipList.map(item => item.id)
     this.initData()
   },
   updated () {},
@@ -195,11 +260,40 @@ export default {
       this.currentPage = 1
       this.initData()
     },
+    handleCheckAllLevelChange (bool) {
+      this.checkLevelList = bool ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] : []
+      this.isIndeterminateAllLevel = false
+      this.currentPage = 1
+      this.initData()
+    },
+    handleCheckedLevelChange (value) {
+      this.checkAllLevel = 16 === value.length
+      this.isIndeterminateAllLevel = value.length > 0 && value.length < 16
+      this.currentPage = 1
+      this.initData()
+    },
+    handleCheckAllPositionChange (bool) {
+      this.checkPositionList = bool ? [0, 1, 2, 3, 4, 5] : []
+      this.isIndeterminateAllPosition = false
+      this.currentPage = 1
+      this.initData()
+    },
+    handleCheckedPositionChange (value) {
+      this.checkAllPosition = 6 === value.length
+      this.isIndeterminateAllPosition = value.length > 0 && value.length < 6
+      this.currentPage = 1
+      this.initData()
+    },
     initData () {
       const data = this.userList[parseInt(this.currentUser)].data
 
       this.list = data.hero_equips
-        .filter(item => (this.checkAttrList.indexOf(item.mainAttr.type) !== -1))
+        .filter(item => {
+          return (this.checkAttrList.indexOf(item.mainAttr.type) !== -1)
+            && (this.checkLevelList.indexOf(item.level) !== -1)
+            && (this.checkPositionList.indexOf(item.pos) !== -1)
+            && ((this.checkEquipType && this.checkEquipType > 0) ? this.checkEquipType === item.suit_id : true)
+        })
         .sort((a, b) => b.born - a.born)
 
       if (this.$refs.equipTable && typeof this.$refs.equipTable.clearSort === 'function') {
@@ -237,7 +331,7 @@ export default {
 @import "~@/assets/css/flex-custom.scss";
 
 .page-equip-list {
-  padding: 10px 40px 20px;
+  padding: 0 40px 20px;
   height: 100%;
   //position: relative;
   width: 1600px;
