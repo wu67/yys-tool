@@ -157,7 +157,7 @@
         layout="prev, pager, next, jumper, sizes, total"
         :current-page.sync="currentPage"
         :page-size.sync="pageSize"
-        :page-sizes="[5, 10, 15,  20]"
+        :page-sizes="[5, 10, 15, 20, 40, 100]"
         :total="list.length">
     </el-pagination>
     </div>
