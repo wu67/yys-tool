@@ -22,6 +22,8 @@ export default {
             pos: item.pos,
             quality: item.quality,
             suit_id: item.suit_id,
+            // 副属性条数，俗称 腿
+            randomAttrsLength: item.random_attrs.length || 0,
             mainAttr: {
               type: item.base_attr.type
             }

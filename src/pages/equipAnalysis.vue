@@ -23,6 +23,9 @@
         <div v-for="(suit, suitIndex) in scatteredSuit" :key="suitIndex">
           <div>散件{{ transNumberToChinese(suitIndex + 1) }}速: {{ suit.toFixed(3) }}; &nbsp;</div>
         </div>
+        <div>&nbsp;满速17+: {{ fullCount17 }}个;</div>
+        <div>&nbsp;满速16+: {{ fullCount }}个;</div>
+        <div>&nbsp;满速15+: {{ fullCount15 }}个;</div>
       </div>
     </div>
     <div class="flex wrap" v-loading="loading">
@@ -134,7 +137,11 @@ export default {
       aData: [],
       // 散件速度计算
       scatteredSuit: [],
-      loading: false
+      loading: false,
+      // 16满速个数统计
+      fullCount: 0,
+      fullCount15: 0,
+      fullCount17: 0
     }
   },
   computed: {
@@ -159,6 +166,9 @@ export default {
   methods: {
     transNumberToChinese (value) { return util.transNumberToChinese(value) },
     initData (attrName = 'Speed') {
+      this.fullCount = 0
+      this.fullCount17 = 0
+      this.fullCount15 = 0
       this.loading = true
       // 散件
       let scatteredSuit = {
@@ -189,14 +199,22 @@ export default {
 
         this.userList[parseInt(this.currentUser)].data.hero_equips.forEach(item => {
           if (item.suit_id === equip.id) {
+            let sum = util.getAttrSum(item, attrName)
+
+            if ((sum > 15 && item.pos !== 1) || (sum > 57+15 && item.pos === 1)) this.fullCount15 = this.fullCount15 + 1
+            if ((sum > 16 && item.pos !== 1) || (sum > 57+16 && item.pos === 1)) this.fullCount = this.fullCount + 1
+            if ((sum > 17 && item.pos !== 1) || (sum > 57+17 && item.pos === 1)) this.fullCount17 = this.fullCount17 + 1
+
             finalEquipData.position[item.pos].push({
               mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
-              value: util.getAttrSum(item, attrName)
+              // value: util.getAttrSum(item, attrName)
+              value: sum
             })
             scatteredSuit.position[item.pos].push({
               name: equip.name,
               mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
-              value: util.getAttrSum(item, attrName)
+              // value: util.getAttrSum(item, attrName)
+              value: sum
             })
           }
         })

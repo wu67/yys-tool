@@ -8,7 +8,7 @@
                    v-for="(user, userIndex) in userList"
                    :key="userIndex"></el-tab-pane>
     </el-tabs>
-    <div class="flex" style="margin-bottom: 8px;">
+    <div class="flex between" style="margin-bottom: 8px;">
       <div class="flex">
         <div>主属性：</div>
         <el-checkbox label="all"
@@ -22,6 +22,11 @@
             :key="item.key">{{ item.name }}</el-checkbox>
         </el-checkbox-group>
       </div>
+      <el-tooltip
+        content="本页面只显示6星御魂，非6星不予考虑"
+        placement="left-start">
+        <i class="el-icon-warning-outline"></i>
+      </el-tooltip>
     </div>
     <div class="flex" style="margin-bottom: 8px;">
       <div class="flex">
@@ -144,6 +149,8 @@
             </div>
           </template>
         </el-table-column>
+
+        <el-table-column label="腿" width="50" fixed="right" prop="randomAttrsLength"></el-table-column>
 
         <el-table-column label="获得时间" width="150" fixed="right">
           <template slot-scope="scope">
@@ -290,6 +297,7 @@ export default {
       this.list = data.hero_equips
         .filter(item => {
           return (this.checkAttrList.indexOf(item.mainAttr.type) !== -1)
+            && item.quality === 6
             && (this.checkLevelList.indexOf(item.level) !== -1)
             && (this.checkPositionList.indexOf(item.pos) !== -1)
             && ((this.checkEquipType && this.checkEquipType > 0) ? this.checkEquipType === item.suit_id : true)

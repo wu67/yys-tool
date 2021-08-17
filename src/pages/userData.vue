@@ -55,6 +55,17 @@
             <div class="resources-value">{{ userItem.data.currency.ar_amulet }}</div>
           </div>
           <div class="flex">
+            <div class="">预计有&nbsp;{{
+                calcDrawCount(userItem.data.currency.jade, userItem.data.currency.mystery_amulet + userItem.data.currency.ar_amulet)
+              }}&nbsp;抽</div>
+            <!--            <div class="resources-value"></div>-->
+          </div>
+          <br />
+          <div class="flex">
+            <div class="resources-key">魂玉</div>
+            <div class="resources-value">{{ userItem.data.currency.s_jade }}</div>
+          </div>
+          <div class="flex">
             <div class="resources-key">金蛇皮</div>
             <div class="resources-value">{{ userItem.data.currency.reverse_scale }}</div>
           </div>
@@ -85,6 +96,10 @@
           <div class="flex">
             <div class="resources-key">痴卷</div>
             <div class="resources-value">{{ userItem.data.currency.foolery_pass }}</div>
+          </div>
+          <div class="flex">
+            <div class="resources-key">御灵门票</div>
+            <div class="resources-value">{{ userItem.data.currency.totem_pass }}</div>
           </div>
           <div class="flex">
             <div class="resources-key">御札</div>
@@ -120,6 +135,7 @@
 <script>
 import { mapState } from 'vuex'
 import baseMixin from '@/mixin'
+import mathjs from '@/utils/mathjs'
 
 export default {
   name: 'userData',
@@ -188,6 +204,39 @@ export default {
           this.getUserData()
         })
       })
+    },
+    // 预计可抽卡次数
+    calcDrawCount (jade, amulet) {
+      const temp = parseFloat(mathjs.chain(jade).multiply(11).divide(1000).add(amulet).done().toPrecision(12))
+      // 持有符咒和勾玉在商店按1000:11兑换的符咒之和
+      let rest = Math.floor(temp)
+
+      let sum = 0
+
+      // 模拟抽卡
+      do {
+        // 抽数+1
+        sum++
+        // 余票-1
+        rest--
+
+        if (sum === 300) {
+          // 第300抽送1000勾即11票
+          rest += 11
+        } else if (sum < 500 && sum % 50 === 0) {
+          // 500 抽以内，每抽50抽会送5抽
+          rest += 5
+        } else if (sum === 500) {
+          // 第500抽送10票
+          rest += 10
+        } else if (sum <= 1000 && sum % 100 === 0) {
+          // 到达500抽后，每抽100抽会送10抽
+          rest += 10
+        }
+
+      } while (rest > 0)
+
+      return sum
     }
   }
 }
