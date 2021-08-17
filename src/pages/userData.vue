@@ -135,7 +135,6 @@
 <script>
 import { mapState } from 'vuex'
 import baseMixin from '@/mixin'
-import mathjs from '@/utils/mathjs'
 
 export default {
   name: 'userData',
@@ -207,7 +206,8 @@ export default {
     },
     // 预计可抽卡次数
     calcDrawCount (jade, amulet) {
-      const temp = parseFloat(mathjs.chain(jade).multiply(11).divide(1000).add(amulet).done().toPrecision(12))
+      const temp = Math.floor(jade / 1000) * 11 + amulet
+
       // 持有符咒和勾玉在商店按1000:11兑换的符咒之和
       let rest = Math.floor(temp)
 
