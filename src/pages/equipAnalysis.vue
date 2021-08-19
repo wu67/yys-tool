@@ -3,14 +3,21 @@
     <div class="herder">
       <div class="flex baseline">
         <h2>满速套装分析</h2>
-        <div style="font-size: 12px;color: #999;margin: 0 10px;">所列速度均为副属性，二号位只显示双速，无速度不予显示</div>
+        <div style="font-size: 12px;color: #999;margin: 0 10px;">用于分析某一套装的速度短板，方便赌魂/爆肝</div>
+
         <div class="analysis-value neck">&gt;13.5</div>
         <div class="analysis-value full">&gt;15</div>
         <div class="analysis-value rare">&gt;16.5</div>
         <div class="analysis-value extreme">&gt;=17</div>
         <div class="analysis-value european">&gt;=17.5</div>
+
+        <el-tooltip
+          style="margin-left: 10px;"
+          content="所列速度均为副属性，二号位只显示双速，无速度不予显示"
+          placement="bottom">
+          <i class="el-icon-warning-outline"></i>
+        </el-tooltip>
       </div>
-      <h5>用于分析某一套装的速度短板，方便赌魂/爆肝</h5>
       <el-tabs v-model="currentUser"
                v-if="userList.length > 1"
                type="card"
@@ -65,7 +72,7 @@
             <template v-if="p.length > 1 && (pIndex !== 1 && p[1].value  > 15 || (pIndex === 1 && p[1].value > (57 + 15)))">
               <el-tooltip effect="dark"
                           placement="top"
-                          :content="'2速 主' + allAttrMap[`${p[1].mainAttr.type}`] + ', ' + p[1].value.toFixed(2) + '速'">
+                          :content="'2速 主' + allAttrMap[`${p[1].mainAttr.type}`] + ', ' + (pIndex === 1 ? (p[1].value - 57).toFixed(2) : p[1].value.toFixed(2)) + '速'">
                 <div class="analysis-value"
                      :class="{
                        'neck'    : (pIndex !==1 && p[1].value > 13.5)  || (pIndex === 1 && p[1].value > (57 + 13.5)),
@@ -81,7 +88,7 @@
             <template v-if="p.length > 2 && (pIndex !== 1 && p[2].value  > 15 || (pIndex === 1 && p[2].value > (57 + 15)))">
               <el-tooltip effect="dark"
                           placement="top"
-                          :content="'3速 主' + allAttrMap[`${p[2].mainAttr.type}`] + ', ' + p[2].value.toFixed(2) + '速'">
+                          :content="'3速 主' + allAttrMap[`${p[2].mainAttr.type}`] + ', ' + (pIndex === 1 ? (p[2].value - 57).toFixed(2) : p[2].value.toFixed(2)) + '速'">
                 <div class="analysis-value"
                      :class="{
                        'neck'    : (pIndex !==1 && p[2].value > 13.5)  || (pIndex === 1 && p[2].value > (57 + 13.5)),
@@ -201,9 +208,9 @@ export default {
           if (item.suit_id === equip.id) {
             let sum = util.getAttrSum(item, attrName)
 
-            if ((sum > 15 && item.pos !== 1) || (sum > 57+15 && item.pos === 1)) this.fullCount15 = this.fullCount15 + 1
-            if ((sum > 16 && item.pos !== 1) || (sum > 57+16 && item.pos === 1)) this.fullCount = this.fullCount + 1
-            if ((sum > 17 && item.pos !== 1) || (sum > 57+17 && item.pos === 1)) this.fullCount17 = this.fullCount17 + 1
+            if ((sum > 15 && item.pos !== 1) || (sum > 57 + 15 && item.pos === 1)) this.fullCount15 = this.fullCount15 + 1
+            if ((sum > 16 && item.pos !== 1) || (sum > 57 + 16 && item.pos === 1)) this.fullCount = this.fullCount + 1
+            if ((sum > 17 && item.pos !== 1) || (sum > 57 + 17 && item.pos === 1)) this.fullCount17 = this.fullCount17 + 1
 
             finalEquipData.position[item.pos].push({
               mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
