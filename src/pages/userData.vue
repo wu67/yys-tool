@@ -58,7 +58,6 @@
             <div class="">预计有&nbsp;{{
                 calcDrawCount(userItem.data.currency.jade, userItem.data.currency.mystery_amulet + userItem.data.currency.ar_amulet)
               }}&nbsp;抽</div>
-            <!--            <div class="resources-value"></div>-->
           </div>
           <br />
           <div class="flex">
@@ -207,6 +206,8 @@ export default {
     // 预计可抽卡次数
     calcDrawCount (jade, amulet) {
       const temp = Math.floor(jade / 1000) * 11 + amulet
+      // 不足一千勾的零散勾玉
+      let restJade = jade % 1000
 
       // 持有符咒和勾玉在商店按1000:11兑换的符咒之和
       let rest = Math.floor(temp)
@@ -220,20 +221,27 @@ export default {
         // 余票-1
         rest--
 
-        if (sum === 300) {
-          // 第300抽送1000勾即11票
-          rest += 11
-        } else if (sum < 500 && sum % 50 === 0) {
+        if (sum < 500 && sum % 50 === 0) {
           // 500 抽以内，每抽50抽会送5抽
           rest += 5
-        } else if (sum === 500) {
-          // 第500抽送10票
-          rest += 10
-        } else if (sum <= 1000 && sum % 100 === 0) {
-          // 到达500抽后，每抽100抽会送10抽
-          rest += 10
-        }
 
+          if (sum === 300 || sum === 400) {
+            // 第300抽、400抽会送1000勾即11票
+            rest += 11
+          }
+        } else if (sum <= 1000 && sum % 100 === 0) {
+          // 到达500抽后，每抽100抽会送10抽, 第500抽本身也是送10票的。
+          rest += 10
+          if (sum === 600 || sum === 800 || sum === 1000) {
+            // 未算 600、800、1000抽各送500勾
+            restJade += 500
+            if (restJade >= 1000) {
+              // 凑齐1000勾换算成11票
+              restJade -= 1000
+              sum += 11
+            }
+          }
+        }
       } while (rest > 0)
 
       return sum
