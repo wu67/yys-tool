@@ -240,8 +240,19 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    pageSize () {
+      this.currentPage = 1
+      localStorage.setItem('equipListPageSize', this.pageSize)
+    }
+  },
   created () {
+    const size = localStorage.getItem('equipListPageSize')
+    if (size) {
+      this.pageSize = parseInt(size)
+    } else {
+      localStorage.setItem('equipListPageSize', this.pageSize)
+    }
     this.checkAttrList = this.allAttrList.map(item => item.key)
     // this.checkEquipType = this.equipList.map(item => item.id)
     this.initData()
