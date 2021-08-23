@@ -154,7 +154,10 @@
 
         <el-table-column label="获得时间" width="150" fixed="right">
           <template slot-scope="scope">
-            <div class="born-time">{{ new Date(scope.row.born * 1000) | formatTime('yyyy-MM-dd hh:mm') }}</div>
+            <!-- 导出数据里这个时间是个中时区（+0000）的秒数时间 -->
+            <div class="born-time">{{
+                new Date((scope.row.born - new Date().getTimezoneOffset() * 60) * 1000) | formatTime('yyyy-MM-dd hh:mm')
+              }}</div>
           </template>
         </el-table-column>
       </el-table>
