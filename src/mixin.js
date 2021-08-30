@@ -1,4 +1,4 @@
-import Dexie from 'dexie'
+import $db from '@/db.js'
 
 export default {
   filters: {
@@ -32,21 +32,9 @@ export default {
     }
   },
   created () {
-    this.connectDB()
+    this.db = $db
   },
   methods: {
-    connectDB () {
-      // todo db面向对象重构。目前会重复创建连接，完全面条式的面向过程代码
-      this.db = new Dexie('yyx-tool')
-
-      if (this.db.user && this.db.not_included) {
-        return
-      }
-      this.db.version(1).stores({
-        user: `user_id,content`,
-        not_included: `user_id,content`
-      })
-    },
     updateUserData (index = -1, value) {
       if (index === -1) {
         this.db.user.add({
