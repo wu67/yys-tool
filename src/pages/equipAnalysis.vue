@@ -42,7 +42,12 @@
         shadow="hover"
         v-for="(equip, equipIndex) in aData"
         :key="equipIndex">
-        <div slot="header">
+        <div slot="header" class="flex suit-name-wrap">
+          <img
+            v-if="equip.id > 0"
+            :src="require(`@/assets/suit_icon/${equip.id}.png`)"
+            class="background"
+          />
           <div>{{ equip.name }}</div>
         </div>
         <div class="position" v-for="(p, pIndex) in equip.position" :key="pIndex">
@@ -266,7 +271,7 @@ export default {
 <style lang="scss">
 .page-equip-analysis {
   .el-card__header {
-    padding: 10px 10px 6px;
+    padding: 0;
   }
 
   .el-card__body {
@@ -348,5 +353,21 @@ export default {
 .important {
   border-color: #bbb;
   background-color: #f6f6f6;
+}
+
+.background {
+  width: 30px;
+  height: 30px;
+  margin-right: 6px;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  //background-size: contain;
+  //background-position: center;
+  //background-repeat: no-repeat;
+}
+
+.suit-name-wrap {
+  height: 38px;
+  padding: 0 6px;
 }
 </style>
