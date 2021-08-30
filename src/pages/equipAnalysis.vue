@@ -226,12 +226,13 @@ export default {
           }
         })
 
-        finalEquipData.position.forEach(item => {
+        for (let item of finalEquipData.position) {
           item.sort((a, b) => (b.value - a.value))
-        })
-        scatteredSuit.position.forEach(item => {
+        }
+
+        for (let item of scatteredSuit.position) {
           item.sort((a, b) => (b.value - a.value))
-        })
+        }
         return finalEquipData
       })
 
