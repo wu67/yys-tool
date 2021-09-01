@@ -76,6 +76,25 @@
           </el-option>
         </el-select>
       </div>
+      <div class="flex" style="margin-left: 40px;">
+        <div>副属性：</div>
+        <el-select
+          v-model="randomAttrsLengthFilter"
+          clearable
+          size="mini"
+          placeholder="可选则副属性数量"
+          no-data-text="全部"
+          @change="initData"
+        >
+          <el-option
+            v-for="item in randomAttrsSelectorList"
+            :key="item.key"
+            :label="item.name"
+            :value="item.key">
+          </el-option>
+
+        </el-select>
+      </div>
     </div>
     <div
       style="">
@@ -211,7 +230,18 @@ export default {
       // 被过滤过的数据，未分页过的。
       list: [],
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      randomAttrsLengthFilter: '',
+      randomAttrsSelectorList: [
+        {
+          key: 1,
+          name: '4腿'
+        },
+        {
+          key: 2,
+          name: '瘸腿'
+        }
+      ]
     }
   },
   computed: {
@@ -315,6 +345,14 @@ export default {
             && (this.checkLevelList.indexOf(item.level) !== -1)
             && (this.checkPositionList.indexOf(item.pos) !== -1)
             && ((this.checkEquipType && this.checkEquipType > 0) ? this.checkEquipType === item.suit_id : true)
+        })
+        .filter(item => {
+          if (this.randomAttrsLengthFilter === 1) {
+            return item.randomAttrsLength === 4
+          } else if (this.randomAttrsLengthFilter === 2) {
+            return item.randomAttrsLength !== 4
+          }
+          return true
         })
         .sort((a, b) => b.born - a.born)
 
