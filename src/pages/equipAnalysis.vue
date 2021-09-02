@@ -13,8 +13,8 @@
 
         <el-tooltip
           style="margin-left: 10px;"
-          content="所列速度均为副属性，二号位只显示双速，无速度不予显示"
-          placement="bottom">
+          content="所列速度均为副属性，二号位只显示双速，无速度不予显示，胚子只统计4腿的"
+          placement="right">
           <i class="el-icon-warning-outline"></i>
         </el-tooltip>
       </div>
@@ -26,13 +26,15 @@
                      v-for="(u, userIndex) in userList"
                      :key="userIndex"></el-tab-pane>
       </el-tabs>
-      <div class="flex center">
+      <div class="flex center extendCountArea">
         <div v-for="(suit, suitIndex) in scatteredSuit" :key="suitIndex">
-          <div>散件{{ transNumberToChinese(suitIndex + 1) }}速: {{ suit.toFixed(3) }}; &nbsp;</div>
+          <div>散件{{ transNumberToChinese(suitIndex + 1) }}速: {{ suit.toFixed(3) }}</div>
         </div>
-        <div>&nbsp;满速17+: {{ fullCount17 }}个;</div>
-        <div>&nbsp;满速16+: {{ fullCount }}个;</div>
-        <div>&nbsp;满速15+: {{ fullCount15 }}个;</div>
+        <div>满速17+: {{ fullCount17 }}个</div>
+        <div>满速16+: {{ fullCount }}个</div>
+        <div>满速15+: {{ fullCount15 }}个</div>
+        <div>双速胚子：{{ doubleSpeedPrototypeCount }}个</div>
+        <div>速度胚子：{{ speedPrototypeCount }}个</div>
       </div>
     </div>
     <div class="flex wrap" v-loading="loading">
@@ -153,7 +155,10 @@ export default {
       // 16满速个数统计
       fullCount: 0,
       fullCount15: 0,
-      fullCount17: 0
+      fullCount17: 0,
+      doubleSpeedPrototypeCount: 0,
+      // 速度胚子个数
+      speedPrototypeCount: 0
     }
   },
   computed: {
@@ -181,6 +186,8 @@ export default {
       this.fullCount = 0
       this.fullCount17 = 0
       this.fullCount15 = 0
+      this.speedPrototypeCount = 0
+      this.doubleSpeedPrototypeCount = 0
       this.loading = true
       // 散件
       let scatteredSuit = {
@@ -216,6 +223,15 @@ export default {
             if ((sum > 15 && item.pos !== 1) || (sum > 57 + 15 && item.pos === 1)) this.fullCount15 = this.fullCount15 + 1
             if ((sum > 16 && item.pos !== 1) || (sum > 57 + 16 && item.pos === 1)) this.fullCount = this.fullCount + 1
             if ((sum > 17 && item.pos !== 1) || (sum > 57 + 17 && item.pos === 1)) this.fullCount17 = this.fullCount17 + 1
+
+            if (item.level === 0 && item['Speed'] && item.randomAttrsLength === 4) {
+              if (item.pos !== 1) {
+                this.speedPrototypeCount += 1
+              }
+              if (item.mainAttr.type === 'Speed') {
+                this.doubleSpeedPrototypeCount += 1
+              }
+            }
 
             finalEquipData.position[item.pos].push({
               mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
@@ -369,5 +385,15 @@ export default {
 .suit-name-wrap {
   height: 38px;
   padding: 0 6px;
+}
+
+.extendCountArea {
+  & > div {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0 4px;
+    margin-right: 8px;
+    margin-bottom: 4px;
+  }
 }
 </style>
