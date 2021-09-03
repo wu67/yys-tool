@@ -87,8 +87,7 @@
                        'rare'    : (pIndex !==1 && p[1].value > 16.5)  || (pIndex === 1 && p[1].value > (57 + 16.5)),
                        'extreme' : (pIndex !==1 && p[1].value >= 17)   || (pIndex === 1 && p[1].value >= (57 + 17)),
                        'european': (pIndex !==1 && p[1].value >= 17.5) || (pIndex === 1 && p[1].value >= (57 + 17.5)),
-                     }">&nbsp;&nbsp;
-                </div>
+                     }">&nbsp;&nbsp;</div>
               </el-tooltip>
             </template>
 
@@ -103,8 +102,7 @@
                        'rare'    : (pIndex !==1 && p[2].value > 16.5)  || (pIndex === 1 && p[2].value > (57 + 16.5)),
                        'extreme' : (pIndex !==1 && p[2].value >= 17)   || (pIndex === 1 && p[2].value >= (57 + 17)),
                        'european': (pIndex !==1 && p[2].value >= 17.5) || (pIndex === 1 && p[2].value >= (57 + 17.5)),
-                     }">&nbsp;&nbsp;
-                </div>
+                     }">&nbsp;&nbsp;</div>
               </el-tooltip>
             </template>
 
@@ -312,10 +310,9 @@ export default {
 }
 
 .equip-item {
-  width: 144px;
-  //max-width: 150px;
+  width: 149px;
   min-height: 140px;
-  margin-right: 12px;
+  margin-right: 9px;
   margin-bottom: 10px;
 }
 
@@ -377,9 +374,6 @@ export default {
   margin-right: 6px;
   border: 1px solid #eee;
   border-radius: 50%;
-  //background-size: contain;
-  //background-position: center;
-  //background-repeat: no-repeat;
 }
 
 .suit-name-wrap {
