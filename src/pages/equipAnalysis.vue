@@ -33,7 +33,7 @@
       <el-card class="equip-item" :class="{ 'important': importantSuit.indexOf(equip.id) !== -1 }" shadow="hover" v-for="(equip, equipIndex) in aData" :key="equipIndex">
         <template #header>
           <div class="flex suit-name-wrap">
-            <img v-if="equip.id > 0" :src="`/src/assets/suit_icon/${equip.id}.png`" class="background" />
+            <img v-if="equip.id > 0" :src="getImageURL(equip.id)" class="background" />
             <div>{{ equip.name }}</div>
           </div>
         </template>
@@ -133,6 +133,10 @@ let loading = ref(false)
 const changeUser = function () {
   loading.value = true
   initData()
+}
+
+const getImageURL = function (suitCode) {
+  return new URL(`/src/assets/suit_icon/${suitCode}.png`, import.meta.url).href
 }
 
 const $store = useStore()
