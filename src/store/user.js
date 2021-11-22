@@ -1,19 +1,20 @@
-import Vue from 'vue'
 import util from '@/utils/index'
-
+import { toRaw } from 'vue'
 export default {
   namespaced: true,
-  state: {
-    userList: [],
+  state() {
+    return {
+      list: [],
+    }
   },
   getters: {
     // 经过处理的用户数据列表
     // eslint-disable-next-line
-    userList (state, getters, rootState) {
-      return state.userList.map(user => {
-        let newUser = JSON.parse(JSON.stringify(user))
-        newUser.data.hero_equips = user.data.hero_equips.map(item => {
+    list(state, getters, rootState) {
+      return state.list.map(user => {
+        let newUser = JSON.parse(JSON.stringify(toRaw(user)))
 
+        newUser.data.hero_equips = user.data.hero_equips.map(item => {
           const result = {
             id: item.id,
             single_attrs: [],
@@ -25,7 +26,8 @@ export default {
             // 副属性条数，俗称 腿
             randomAttrsLength: item.random_attrs.length || 0,
             mainAttr: {
-              type: item.base_attr.type
+              type: item.base_attr.type,
+              value: 0
             }
           }
 
@@ -63,13 +65,13 @@ export default {
   actions: {},
   mutations: {
     // payload { index: num, value }. index: -1新增， -2整组替换，>-1目标值替换
-    updateUserDataByIndex (state, payload) {
+    updateUserDataByIndex(state, payload) {
       if (payload.index === -1) {
-        state.userList.push(payload.value)
+        state.list.push(payload.value)
       } else if (payload.index === -2) {
-        Vue.set(state, 'userList', payload.value)
+        state.list = payload.value
       } else {
-        Vue.set(state.userList, payload.index, payload.value)
+        state.list[payload.index] = payload.value
       }
     }
   }

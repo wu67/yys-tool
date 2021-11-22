@@ -1,6 +1,6 @@
 <template>
   <div class="page-equip-analysis">
-    <div class="herder">
+    <div class="content-top">
       <div class="flex baseline">
         <h2>满速套装分析</h2>
         <div style="font-size: 12px;color: #999;margin: 0 10px;">用于分析某一套装的速度短板，方便赌魂/爆肝</div>
@@ -11,20 +11,12 @@
         <div class="analysis-value extreme">&gt;=17</div>
         <div class="analysis-value european">&gt;=17.5</div>
 
-        <el-tooltip
-          style="margin-left: 10px;"
-          content="所列速度均为副属性，二号位只显示双速，无速度不予显示，胚子只统计4腿的"
-          placement="right">
-          <i class="el-icon-warning-outline"></i>
+        <el-tooltip style="margin-left: 10px;" content="所列速度均为副属性，二号位只显示双速，无速度不予显示，胚子只统计4腿的" placement="right">
+          <el-tag size="mini" type="info">?</el-tag>
         </el-tooltip>
       </div>
-      <el-tabs v-model="currentUser"
-               v-if="userList.length > 1"
-               type="card"
-               @tab-click="changeUser">
-        <el-tab-pane :label="u.data.player.name"
-                     v-for="(u, userIndex) in userList"
-                     :key="userIndex"></el-tab-pane>
+      <el-tabs v-model="currentUser" v-if="userList.length > 1" type="card" @tab-click="changeUser">
+        <el-tab-pane :label="u.data.player.name" v-for="(u, userIndex) in userList" :key="userIndex"></el-tab-pane>
       </el-tabs>
       <div class="flex center extendCountArea">
         <div v-for="(suit, suitIndex) in scatteredSuit" :key="suitIndex">
@@ -38,20 +30,13 @@
       </div>
     </div>
     <div class="flex wrap" v-loading="loading">
-      <el-card
-        class="equip-item"
-        :class="{ 'important': importantSuit.indexOf(equip.id) !== -1 }"
-        shadow="hover"
-        v-for="(equip, equipIndex) in aData"
-        :key="equipIndex">
-        <div slot="header" class="flex suit-name-wrap">
-          <img
-            v-if="equip.id > 0"
-            :src="require(`@/assets/suit_icon/${equip.id}.png`)"
-            class="background"
-          />
-          <div>{{ equip.name }}</div>
-        </div>
+      <el-card class="equip-item" :class="{ 'important': importantSuit.indexOf(equip.id) !== -1 }" shadow="hover" v-for="(equip, equipIndex) in aData" :key="equipIndex">
+        <template #header>
+          <div class="flex suit-name-wrap">
+            <img v-if="equip.id > 0" :src="`/src/assets/suit_icon/${equip.id}.png`" class="background" />
+            <div>{{ equip.name }}</div>
+          </div>
+        </template>
         <div class="position" v-for="(p, pIndex) in equip.position" :key="pIndex">
           <div class="flex analysis-item">
             <div>位置{{ transNumberToChinese(pIndex + 1) }}&nbsp;</div>
@@ -59,53 +44,66 @@
               v-if="p.length > 0"
               class="analysis-value"
               :class="{
-                'neck'    : (pIndex !==1 && p[0].value > 13.5)  || (pIndex === 1 && p[0].value > (57 + 13.5)),
-                'full'    : (pIndex !==1 && p[0].value > 15)    || (pIndex === 1 && p[0].value > (57 + 15)),
-                'rare'    : (pIndex !==1 && p[0].value > 16.5)  || (pIndex === 1 && p[0].value > (57 + 16.5)),
-                'extreme' : (pIndex !==1 && p[0].value >= 17)   || (pIndex === 1 && p[0].value >= (57 + 17)),
-                'european': (pIndex !==1 && p[0].value >= 17.5) || (pIndex === 1 && p[0].value >= (57 + 17.5)),
+                'neck': (pIndex !== 1 && p[0].value > 13.5) || (pIndex === 1 && p[0].value > (57 + 13.5)),
+                'full': (pIndex !== 1 && p[0].value > 15) || (pIndex === 1 && p[0].value > (57 + 15)),
+                'rare': (pIndex !== 1 && p[0].value > 16.5) || (pIndex === 1 && p[0].value > (57 + 16.5)),
+                'extreme': (pIndex !== 1 && p[0].value >= 17) || (pIndex === 1 && p[0].value >= (57 + 17)),
+                'european': (pIndex !== 1 && p[0].value >= 17.5) || (pIndex === 1 && p[0].value >= (57 + 17.5)),
               }"
             >
-              <el-tooltip effect="dark"
-                          placement="top"
-                          :content="'主 ' + allAttrMap[`${p[0].mainAttr.type}`]"
-                          :disabled="!(p.length > 0 && (pIndex === 3 || pIndex === 5) && p[0].value > 15)">
-                <!-- 二号位置仅显示双速的 -->
-                <div v-if="pIndex === 1 && p[0].value > 59">{{ (p[0].value - 57).toFixed(2) }}</div>
-                <div v-else-if="pIndex !== 1 && p[0].value > 0">{{ p[0].value.toFixed(2) }}</div>
+              <!-- 二号位置仅显示双速的. 写到这里是因为不能把注视写到tooltip里面...不知道是ele的锅还是vite的锅 -->
+              <el-tooltip
+                effect="dark"
+                placement="top"
+                :content="'主 ' + allAttrMap[`${p[0].mainAttr.type}`]"
+                :disabled="!(p.length > 0 && (pIndex === 3 || pIndex === 5) && p[0].value > 15)"
+              >
+                <div>
+                  <div v-if="pIndex === 1 && p[0].value > 59">{{ (p[0].value - 57).toFixed(2) }}</div>
+                  <div v-else-if="pIndex !== 1 && p[0].value > 0">{{ p[0].value.toFixed(2) }}</div>
+                </div>
               </el-tooltip>
             </div>
 
-            <template v-if="p.length > 1 && (pIndex !== 1 && p[1].value  > 15 || (pIndex === 1 && p[1].value > (57 + 15)))">
-              <el-tooltip effect="dark"
-                          placement="top"
-                          :content="'2速 主' + allAttrMap[`${p[1].mainAttr.type}`] + ', ' + (pIndex === 1 ? (p[1].value - 57).toFixed(2) : p[1].value.toFixed(2)) + '速'">
-                <div class="analysis-value"
-                     :class="{
-                       'neck'    : (pIndex !==1 && p[1].value > 13.5)  || (pIndex === 1 && p[1].value > (57 + 13.5)),
-                       'full'    : (pIndex !==1 && p[1].value > 15)    || (pIndex === 1 && p[1].value > (57 + 15)),
-                       'rare'    : (pIndex !==1 && p[1].value > 16.5)  || (pIndex === 1 && p[1].value > (57 + 16.5)),
-                       'extreme' : (pIndex !==1 && p[1].value >= 17)   || (pIndex === 1 && p[1].value >= (57 + 17)),
-                       'european': (pIndex !==1 && p[1].value >= 17.5) || (pIndex === 1 && p[1].value >= (57 + 17.5)),
-                     }">&nbsp;&nbsp;</div>
+            <template v-if="p.length > 1 && (pIndex !== 1 && p[1].value > 15 || (pIndex === 1 && p[1].value > (57 + 15)))">
+              <el-tooltip
+                effect="dark"
+                placement="top"
+                :content="'2速 主' + allAttrMap[`${p[1].mainAttr.type}`] + ', ' + (pIndex === 1 ? (p[1].value - 57).toFixed(2) : p[1].value.toFixed(2)) + '速'"
+              >
+                <div
+                  class="analysis-value"
+                  :class="{
+                    'neck': (pIndex !== 1 && p[1].value > 13.5) || (pIndex === 1 && p[1].value > (57 + 13.5)),
+                    'full': (pIndex !== 1 && p[1].value > 15) || (pIndex === 1 && p[1].value > (57 + 15)),
+                    'rare': (pIndex !== 1 && p[1].value > 16.5) || (pIndex === 1 && p[1].value > (57 + 16.5)),
+                    'extreme': (pIndex !== 1 && p[1].value >= 17) || (pIndex === 1 && p[1].value >= (57 + 17)),
+                    'european': (pIndex !== 1 && p[1].value >= 17.5) || (pIndex === 1 && p[1].value >= (57 + 17.5)),
+                  }"
+                >&nbsp;&nbsp;</div>
               </el-tooltip>
             </template>
 
-            <template v-if="p.length > 2 && (pIndex !== 1 && p[2].value  > 15 || (pIndex === 1 && p[2].value > (57 + 15)))">
-              <el-tooltip effect="dark"
-                          placement="top"
-                          :content="'3速 主' + allAttrMap[`${p[2].mainAttr.type}`] + ', ' + (pIndex === 1 ? (p[2].value - 57).toFixed(2) : p[2].value.toFixed(2)) + '速'">
-                <div class="analysis-value"
-                     :class="{
-                       'neck'    : (pIndex !==1 && p[2].value > 13.5)  || (pIndex === 1 && p[2].value > (57 + 13.5)),
-                       'full'    : (pIndex !==1 && p[2].value > 15)    || (pIndex === 1 && p[2].value > (57 + 15)),
-                       'rare'    : (pIndex !==1 && p[2].value > 16.5)  || (pIndex === 1 && p[2].value > (57 + 16.5)),
-                       'extreme' : (pIndex !==1 && p[2].value >= 17)   || (pIndex === 1 && p[2].value >= (57 + 17)),
-                       'european': (pIndex !==1 && p[2].value >= 17.5) || (pIndex === 1 && p[2].value >= (57 + 17.5)),
-                     }">&nbsp;&nbsp;</div>
+            <template v-if="p.length > 2 && (pIndex !== 1 && p[2].value > 15 || (pIndex === 1 && p[2].value > (57 + 15)))">
+              <el-tooltip
+                effect="dark"
+                placement="top"
+                :content="'3速 主' + allAttrMap[`${p[2].mainAttr.type}`] + ', ' + (pIndex === 1 ? (p[2].value - 57).toFixed(2) : p[2].value.toFixed(2)) + '速'"
+              >
+                <template>
+                  <div
+                    class="analysis-value"
+                    :class="{
+                      'neck': (pIndex !== 1 && p[2].value > 13.5) || (pIndex === 1 && p[2].value > (57 + 13.5)),
+                      'full': (pIndex !== 1 && p[2].value > 15) || (pIndex === 1 && p[2].value > (57 + 15)),
+                      'rare': (pIndex !== 1 && p[2].value > 16.5) || (pIndex === 1 && p[2].value > (57 + 16.5)),
+                      'extreme': (pIndex !== 1 && p[2].value >= 17) || (pIndex === 1 && p[2].value >= (57 + 17)),
+                      'european': (pIndex !== 1 && p[2].value >= 17.5) || (pIndex === 1 && p[2].value >= (57 + 17.5)),
+                    }"
+                  >&nbsp;&nbsp;</div>
+                </template>
               </el-tooltip>
             </template>
-
           </div>
         </div>
       </el-card>
@@ -114,174 +112,150 @@
 </template>
 
 <script>
-import {
-  mapState,
-  mapGetters
-} from 'vuex'
-import util from '@/utils/index'
-import baseMixin from '@/mixin'
-
-export default {
+export default defineComponent({
   name: 'equipAnalysis',
-  mixins: [
-    baseMixin
-  ],
-  components: {},
-  filters: {},
-  props: {},
-  data () {
-    return {
-      // 重点套装 版本之子
-      importantSuit: [
-        300002,
-        300010,
-        300012,
-        300013,
-        300015,
-        300019,
-        300021,
-        300023,
-        300034,
-        300035,
-        300079
-      ],
-      currentUser: 0,
-      aData: [],
-      // 散件速度计算
-      scatteredSuit: [],
-      loading: false,
-      // 16满速个数统计
-      fullCount: 0,
-      fullCount15: 0,
-      fullCount17: 0,
-      doubleSpeedPrototypeCount: 0,
-      // 速度胚子个数
-      speedPrototypeCount: 0
-    }
-  },
-  computed: {
-    ...mapState([
-      'equipList',
-      'notPercentAttr'
-    ]),
-    ...mapGetters([
-      'allAttrMap',
-    ]),
-    ...mapGetters('user', [
-      'userList'
-    ])
-  },
-  watch: {},
-  created () {
-    this.initData()
-  },
-  mounted () {},
-  updated () {},
-  beforeDestroy () {},
-  methods: {
-    transNumberToChinese (value) { return util.transNumberToChinese(value) },
-    initData (attrName = 'Speed') {
-      this.fullCount = 0
-      this.fullCount17 = 0
-      this.fullCount15 = 0
-      this.speedPrototypeCount = 0
-      this.doubleSpeedPrototypeCount = 0
-      this.loading = true
-      // 散件
-      let scatteredSuit = {
-        name: '散件',
-        id: '-111',
-        position: [
-          [],
-          [],
-          [],
-          [],
-          [],
-          []
-        ]
-      }
-      this.aData = this.equipList.map(equip => {
-        const finalEquipData = {
-          ...equip,
-          // 6个位置，按属性排序
-          position: [
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-          ]
-        }
-
-        this.userList[parseInt(this.currentUser)].data.hero_equips.forEach(item => {
-          if (item.suit_id === equip.id) {
-            let sum = util.getAttrSum(item, attrName)
-
-            if ((sum > 15 && item.pos !== 1) || (sum > 57 + 15 && item.pos === 1)) this.fullCount15 = this.fullCount15 + 1
-            if ((sum > 16 && item.pos !== 1) || (sum > 57 + 16 && item.pos === 1)) this.fullCount = this.fullCount + 1
-            if ((sum > 17 && item.pos !== 1) || (sum > 57 + 17 && item.pos === 1)) this.fullCount17 = this.fullCount17 + 1
-
-            if (item.level === 0 && item['Speed'] && item.randomAttrsLength === 4) {
-              if (item.pos !== 1) {
-                this.speedPrototypeCount += 1
-              }
-              if (item.mainAttr.type === 'Speed') {
-                this.doubleSpeedPrototypeCount += 1
-              }
-            }
-
-            finalEquipData.position[item.pos].push({
-              mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
-              // value: util.getAttrSum(item, attrName)
-              value: sum
-            })
-            scatteredSuit.position[item.pos].push({
-              name: equip.name,
-              mainAttr: JSON.parse(JSON.stringify(item.mainAttr)),
-              // value: util.getAttrSum(item, attrName)
-              value: sum
-            })
-          }
-        })
-
-        for (let item of finalEquipData.position) {
-          item.sort((a, b) => (b.value - a.value))
-        }
-
-        for (let item of scatteredSuit.position) {
-          item.sort((a, b) => (b.value - a.value))
-        }
-        return finalEquipData
-      })
-
-      scatteredSuit.position = scatteredSuit.position.map(p => {
-        return p.length > 4 ? p.slice(0, 4) : p
-      })
-      this.aData.unshift(scatteredSuit)
-      // 散件总速度计算
-      this.scatteredSuit = scatteredSuit.position.reduce((total, current) => {
-        total[0] = (current[0].value || 0) + (total[0] || 0)
-        total[1] = (current[1].value || 0) + (total[1] || 0)
-        total[2] = (current[2].value || 0) + (total[2] || 0)
-        // total[3] = (current[3].value || 0) + (total[3] || 0)
-        return total
-      }, [])
-      setTimeout(() => {
-        this.loading = false
-      }, 500)
-    },
-    changeUser () {
-      this.$nextTick(() => {
-        this.initData()
-      })
-    },
-    multiply (value, ratio = 100) {
-      return util.multiply(value, ratio)
-    }
-  }
-}
+})
 </script>
+
+<script setup>
+import {
+  defineComponent,
+  ref,
+  unref,
+  computed,
+} from 'vue'
+import { useStore } from 'vuex'
+import util from '@/utils/index'
+
+const transNumberToChinese = function (value) { return util.transNumberToChinese(value) }
+
+let loading = ref(false)
+const changeUser = function () {
+  loading.value = true
+  initData()
+}
+
+const $store = useStore()
+const equipList = computed(() => $store.state.equipList)
+const allAttrMap = computed(() => $store.getters.allAttrMap)
+const userList = computed(() => $store.getters['user/list'])
+// 重点套装 版本之子
+const importantSuit = ref([
+  300002,
+  300010,
+  300012,
+  300019,
+  300021,
+  300023,
+  300034,
+  300079,
+  300080,
+])
+let currentUser = ref('0')
+let aData = ref([])
+// 散件速度计算
+let scatteredSuit = ref([])
+// 16满速个数统计
+let fullCount = ref(0)
+let fullCount15 = ref(0)
+let fullCount17 = ref(0)
+let doubleSpeedPrototypeCount = ref(0)
+// 速度胚子个数
+let speedPrototypeCount = ref(0)
+const initData = function (attrName = 'Speed') {
+  fullCount.value = 0
+  fullCount17.value = 0
+  fullCount15.value = 0
+  speedPrototypeCount.value = 0
+  doubleSpeedPrototypeCount.value = 0
+  loading.value = true
+  // 散件
+  let scatteredSuitData = {
+    name: '散件',
+    id: '-111',
+    position: [
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ]
+  }
+  aData.value = equipList.value.map(equip => {
+    const finalEquipData = {
+      ...equip,
+      // 6个位置，按属性排序
+      position: [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+      ]
+    }
+
+    userList.value[parseInt(currentUser.value)].data.hero_equips.forEach(item => {
+      if (item.suit_id === equip.id) {
+        let sum = util.getAttrSum(unref(item), attrName)
+
+        if ((sum > 15 && item.pos !== 1) || (sum > 57 + 15 && item.pos === 1)) fullCount15.value = fullCount15.value + 1
+        if ((sum > 16 && item.pos !== 1) || (sum > 57 + 16 && item.pos === 1)) fullCount.value = fullCount.value + 1
+        if ((sum > 17 && item.pos !== 1) || (sum > 57 + 17 && item.pos === 1)) fullCount17.value = fullCount17.value + 1
+
+        if (item.level === 0 && item['Speed'] && item.randomAttrsLength === 4) {
+          if (item.pos !== 1) {
+            speedPrototypeCount.value += 1
+          }
+          if (item.mainAttr.type === 'Speed') {
+            doubleSpeedPrototypeCount.value += 1
+          }
+        }
+
+        const tempMainAttr = JSON.parse(JSON.stringify(item.mainAttr))
+        finalEquipData.position[item.pos].push({
+          mainAttr: tempMainAttr,
+          value: sum
+        })
+        scatteredSuitData.position[item.pos].push({
+          name: equip.name,
+          mainAttr: tempMainAttr,
+          value: sum
+        })
+      }
+    })
+
+    for (let item of finalEquipData.position) {
+      item.sort((a, b) => (b.value - a.value))
+    }
+
+    for (let item of scatteredSuitData.position) {
+      item.sort((a, b) => (b.value - a.value))
+    }
+    return finalEquipData
+  })
+
+  scatteredSuitData.position = scatteredSuitData.position.map(p => {
+    return p.length > 4 ? p.slice(0, 4) : p
+  })
+  aData.value.unshift(scatteredSuitData)
+  // 散件总速度计算
+  scatteredSuit.value = scatteredSuitData.position.reduce((total, current) => {
+    total[0] = (current[0].value || 0) + (total[0] || 0)
+    total[1] = (current[1].value || 0) + (total[1] || 0)
+    total[2] = (current[2].value || 0) + (total[2] || 0)
+
+    return total
+  }, [])
+  setTimeout(function () {
+    loading.value = false
+  }, 500)
+}
+
+initData()
+</script>
+
 <style lang="scss">
 .page-equip-analysis {
   .el-card__header {
@@ -289,22 +263,22 @@ export default {
   }
 
   .el-card__body {
-    padding: 20px 0 10px 10px;
+    padding: 20px 0 10px 7px;
   }
 }
 </style>
 <style lang="scss"
        scoped>
-@import "~@/assets/css/flex-custom.scss";
-
+@import "@/assets/css/flex-custom.scss";
+@import "@/assets/css/border-box.scss";
 .page-equip-analysis {
-  padding: 0 16px 20px;
+  padding: 0 0 20px 16px;
   height: 100%;
   width: 1600px;
   margin: 0 auto;
 }
 
-.herder {
+.content-top {
   margin: 0 auto;
   width: 1600px;
 }
@@ -336,7 +310,7 @@ export default {
 }
 
 .neck {
-  background-color: #E1FFFF;
+  background-color: #e1ffff;
 }
 
 .full {
@@ -358,7 +332,7 @@ export default {
 }
 
 .european {
-  background-color: #9400D3;
+  background-color: #9400d3;
   color: #fff;
   font-weight: 500;
 }

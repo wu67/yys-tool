@@ -1,90 +1,77 @@
 <template>
   <div class="dialogSetNotIncluded">
-    <el-dialog
-      :title="`设置未收录 - ${userName}`"
-      :visible.sync="dialogVisible"
-      width="650px"
-      :before-close="beforeClose"
-    >
-      <el-transfer
-        style="margin: 0 auto;"
-        v-model="checkedData"
-        :data="allData"
-        :titles="['已收录', '未收录']"
-        filterable
-      ></el-transfer>
+    <el-dialog :title="`设置未收录 - ${userName}`" v-model="dialogVisible" width="650px" :before-close="handleClose">
+      <el-transfer style="margin: 0 auto;" v-model="checkedData" :data="allData" :titles="['已收录', '未收录']" filterable></el-transfer>
       <div class="flex center">
         <el-button type="primary" @click="save">保存</el-button>
       </div>
-
     </el-dialog>
   </div>
 </template>
 
 // 对话框 设置未收录
 <script>
-import {
-  mapState
-} from 'vuex'
-
-export default {
+export default defineComponent({
   name: 'dialogSetNotIncluded',
-  mixins: [],
-  components: {},
-  filters: {},
-  props: {
-    notIncluded: {
-      type: Array,
-      default: () => { return [] }
-    },
-    userName: {
-      type: String,
-      default: ''
-    },
-    show: {
-      type: Boolean,
-      default: false
-    }
+})
+</script>
+<script setup>
+import {
+  defineComponent,
+  ref,
+  watchEffect,
+  unref,
+} from 'vue'
+
+const props = defineProps({
+  notIncluded: {
+    type: Array,
+    default() { return [] }
   },
-  data () {
-    return {
-      allData: [],
-      checkedData: [],
-      dialogVisible: false
-    }
+  allHeroList: {
+    type: Array,
+    default() { return [] }
   },
-  computed: {
-    ...mapState([
-      'allHeroList'
-    ])
+  userName: {
+    type: String,
+    default: ''
   },
-  watch: {},
-  created () {
-    this.dialogVisible = true
-    this.checkedData = JSON.parse(JSON.stringify(this.notIncluded)).map(item => `${item}`)
-    this.allData = this.allHeroList.map(hero => {
-      return {
-        key: hero.id,
-        label: hero.name
-      }
-    })
-  },
-  mounted () {},
-  updated () {},
-  beforeDestroy () {},
-  methods: {
-    beforeClose () {
-      this.$emit('update:show', false)
-    },
-    save () {
-      this.$emit('change-not-included', this.checkedData.map(item => parseInt(item)))
-      this.dialogVisible = false
-      this.beforeClose()
-    }
+  modelValue: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['update:modelValue', 'change-not-included'])
+
+const allData = unref(props.allHeroList).map(hero => {
+  return {
+    key: hero.id,
+    label: hero.name
+  }
+})
+
+const userName = props.userName
+const handleClose = function (done) {
+  emit('update:modelValue', false)
+  if (typeof done === 'function') {
+    done()
   }
 }
-</script>
 
+const checkedData = ref(props.notIncluded)
+const dialogVisible = ref(false)
+
+watchEffect(() => {
+  dialogVisible.value = props.modelValue
+})
+
+const save = () => {
+  emit('change-not-included', unref(checkedData).map(item => parseInt(item)))
+  handleClose()
+  dialogVisible.value = false
+}
+</script>
 <style lang="scss">
 .dialogSetNotIncluded {
   $transferPanelHeight: 350px;
@@ -98,10 +85,7 @@ export default {
   }
 }
 </style>
-
-<style lang="scss"
-       scoped>
-@import "~@/assets/css/flex-custom.scss";
-.dialogSetNotIncluded {
-}
+<style lang="scss" scoped>
+@import "@/assets/css/flex-custom.scss";
+@import "@/assets/css/border-box.scss";
 </style>

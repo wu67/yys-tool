@@ -1,15 +1,14 @@
 import NZHCN from 'nzh/cn'
-import mathjs from '@/utils/mathjs'
 
 export default {
-  transNumberToChinese (num) {
+  transNumberToChinese(num) {
     return NZHCN.encodeS(num)
   },
-  multiply (value, ratio = 100) {
-    return parseFloat(mathjs.chain(value).multiply(ratio).done().toPrecision(12))
+  multiply(value, ratio = 100) {
+    return parseFloat((value * ratio).toPrecision(12))
   },
   // 计算单个御魂中某个属性的总值
-  getAttrSum (equip, attrName) {
+  getAttrSum(equip, attrName) {
     let sum = 0
     sum += equip[`${attrName}`] || 0
 
