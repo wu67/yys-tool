@@ -24,6 +24,11 @@ import useCommon from './useCommon'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from "vue-router"
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import {
+  ElConfigProvider,
+  ElMenu,
+  ElMenuItem,
+} from "element-plus"
 
 const {
   getUserData,

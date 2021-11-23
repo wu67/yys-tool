@@ -90,7 +90,14 @@ import {
   computed,
 } from 'vue'
 import { useStore } from 'vuex'
-import { ElMessage } from 'element-plus'
+import {
+  ElButton,
+  ElCheckboxGroup,
+  ElCheckbox,
+  ElMessage,
+  ElTable,
+  ElTableColumn,
+} from 'element-plus'
 import dialogSetNotIncluded from '@/components/dialogSetNotIncluded.vue'
 import useCommon from '../useCommon'
 

@@ -22,6 +22,11 @@ import {
   watchEffect,
   unref,
 } from 'vue'
+import {
+  ElButton,
+  ElDialog,
+  ElTransfer,
+} from 'element-plus'
 
 const props = defineProps({
   notIncluded: {

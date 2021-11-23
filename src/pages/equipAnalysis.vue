@@ -126,6 +126,13 @@ import {
 } from 'vue'
 import { useStore } from 'vuex'
 import util from '@/utils/index'
+import {
+  ElCard,
+  ElTabs,
+  ElTabPane,
+  ElTag,
+  ElTooltip,
+} from 'element-plus'
 
 const transNumberToChinese = function (value) { return util.transNumberToChinese(value) }
 

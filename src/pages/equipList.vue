@@ -12,7 +12,7 @@
         </el-checkbox-group>
       </div>
       <el-tooltip content="本页面只显示6星御魂，非6星不予考虑" placement="left-start">
-        <i class="el-icon-warning-outline"></i>
+        <el-tag size="mini" type="info">?</el-tag>
       </el-tooltip>
     </div>
     <div class="flex" style="margin-bottom: 8px;">
@@ -128,6 +128,21 @@ import {
 import {
   useStore,
 } from 'vuex'
+import {
+  ElButton,
+  ElCheckboxGroup,
+  ElCheckbox,
+  ElMessage,
+  ElPagination,
+  ElSelect,
+  ElOption,
+  ElTabs,
+  ElTabPane,
+  ElTable,
+  ElTableColumn,
+  ElTag,
+  ElTooltip,
+} from 'element-plus'
 import util from '@/utils/index'
 import useCommon from '../useCommon'
 

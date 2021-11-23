@@ -128,7 +128,7 @@ import {
 } from 'vue'
 import { useStore } from 'vuex'
 import useCommon from '@/useCommon'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox, ElMessage, ElCard, ElButton } from 'element-plus'
 
 const {
   commonNotIncluded,
