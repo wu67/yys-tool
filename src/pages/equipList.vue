@@ -1,98 +1,288 @@
 <template>
   <div class="page-equip-list">
-    <el-tabs v-model="currentUser" size="small" type="card" @tab-click="changeUser">
-      <el-tab-pane :label="user.data.player.name" v-for="(user, userIndex) in userList" :name="`${userIndex}`" :key="`user-${userIndex}`"></el-tab-pane>
+    <el-tabs
+      v-model="currentUser"
+      size="small"
+      type="card"
+      @tab-click="changeUser"
+    >
+      <el-tab-pane
+        v-for="(user, userIndex) in userList"
+        :key="`user-${userIndex}`"
+        :label="user.data.player.name"
+        :name="`${userIndex}`"
+      />
     </el-tabs>
-    <div class="flex between" style="margin-bottom: 8px;">
+    <div
+      class="flex between"
+      style="margin-bottom: 8px"
+    >
       <div class="flex">
         <div>主属性：</div>
-        <el-checkbox label="all" v-model="checkAllAttr" @change="handleCheckAllAttrChange" :indeterminate="isIndeterminateAllAttr">全部&nbsp;&nbsp;</el-checkbox>&nbsp;
-        <el-checkbox-group @change="handleCheckedAttrChange" v-model="checkAttrList">
-          <el-checkbox v-for="item in allAttrList" :label="item.key" :key="item.key">{{ item.name }}</el-checkbox>
+        <el-checkbox
+          v-model="checkAllAttr"
+          label="all"
+          :indeterminate="isIndeterminateAllAttr"
+          @change="handleCheckAllAttrChange"
+        >
+          全部&nbsp;&nbsp;
+        </el-checkbox>
+        &nbsp;
+        <el-checkbox-group
+          v-model="checkAttrList"
+          @change="handleCheckedAttrChange"
+        >
+          <el-checkbox
+            v-for="item in allAttrList"
+            :key="item.key"
+            :label="item.key"
+          >
+            {{ item.name }}
+          </el-checkbox>
         </el-checkbox-group>
       </div>
-      <el-tooltip content="本页面只显示6星御魂，非6星不予考虑" placement="left-start">
-        <el-tag size="mini" type="info">?</el-tag>
+      <el-tooltip
+        content="本页面只显示6星御魂，非6星不予考虑"
+        placement="left-start"
+      >
+        <el-tag
+          size="mini"
+          type="info"
+        >
+          ?
+        </el-tag>
       </el-tooltip>
     </div>
-    <div class="flex" style="margin-bottom: 8px;">
+    <div
+      class="flex"
+      style="margin-bottom: 8px"
+    >
       <div class="flex">
         <div>等级：</div>
-        <el-checkbox label="all" v-model="checkAllLevel" @change="handleCheckAllLevelChange" :indeterminate="isIndeterminateAllLevel">全部&nbsp;&nbsp;</el-checkbox>&nbsp;
-        <el-checkbox-group @change="handleCheckedLevelChange" v-model="checkLevelList">
-          <el-checkbox v-for="item in 16" :label="item - 1" :key="item - 1">{{ item - 1 }}级</el-checkbox>
+        <el-checkbox
+          v-model="checkAllLevel"
+          label="all"
+          :indeterminate="isIndeterminateAllLevel"
+          @change="handleCheckAllLevelChange"
+        >
+          全部&nbsp;&nbsp;
+        </el-checkbox>
+        &nbsp;
+        <el-checkbox-group
+          v-model="checkLevelList"
+          @change="handleCheckedLevelChange"
+        >
+          <el-checkbox
+            v-for="item in 16"
+            :key="item - 1"
+            :label="item - 1"
+          >
+            {{ item - 1 }}级
+          </el-checkbox>
         </el-checkbox-group>
       </div>
     </div>
-    <div class="flex" style="margin-bottom: 8px;">
+    <div
+      class="flex"
+      style="margin-bottom: 8px"
+    >
       <div class="flex">
         <div>位置：</div>
-        <el-checkbox label="all" v-model="checkAllPosition" @change="handleCheckAllPositionChange" :indeterminate="isIndeterminateAllPosition">全部&nbsp;&nbsp;</el-checkbox>&nbsp;
-        <el-checkbox-group @change="handleCheckedPositionChange" v-model="checkPositionList">
-          <el-checkbox v-for="item in 6" :label="item - 1" :key="item">{{ transNumberToChinese(item) }}号位</el-checkbox>
+        <el-checkbox
+          v-model="checkAllPosition"
+          label="all"
+          :indeterminate="isIndeterminateAllPosition"
+          @change="handleCheckAllPositionChange"
+        >
+          全部&nbsp;&nbsp;
+        </el-checkbox>
+        &nbsp;
+        <el-checkbox-group
+          v-model="checkPositionList"
+          @change="handleCheckedPositionChange"
+        >
+          <el-checkbox
+            v-for="item in 6"
+            :key="item"
+            :label="item - 1"
+          >
+            {{ transNumberToChinese(item) }}号位
+          </el-checkbox>
         </el-checkbox-group>
       </div>
-      <div class="flex" style="margin-left: 60px;">
+      <div
+        class="flex"
+        style="margin-left: 60px"
+      >
         <div>种类：</div>
-        <el-select v-if="equipList" v-model="checkEquipType" clearable size="mini" placeholder="可选择过滤种类" no-data-text="全部" @change="initData">
-          <el-option v-for="item in equipList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-select
+          v-if="equipList"
+          v-model="checkEquipType"
+          clearable
+          size="mini"
+          placeholder="可选择过滤种类"
+          no-data-text="全部"
+          @change="initData"
+        >
+          <el-option
+            v-for="item in equipList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
         </el-select>
       </div>
-      <div class="flex" style="margin-left: 40px;">
+      <div
+        class="flex"
+        style="margin-left: 40px"
+      >
         <div>副属性：</div>
-        <el-select v-model="randomAttrsLengthFilter" clearable size="mini" placeholder="可选则副属性数量" no-data-text="全部" @change="initData">
-          <el-option v-for="item in randomAttrsSelectorList" :key="item.key" :label="item.name" :value="`${item.key}`"></el-option>
+        <el-select
+          v-model="randomAttrsLengthFilter"
+          clearable
+          size="mini"
+          placeholder="可选则副属性数量"
+          no-data-text="全部"
+          @change="initData"
+        >
+          <el-option
+            v-for="item in randomAttrsSelectorList"
+            :key="item.key"
+            :label="item.name"
+            :value="`${item.key}`"
+          />
         </el-select>
       </div>
     </div>
     <div>
-      <el-table :data="computedList" @sort-change="onTableSortChange" highlight-current-row stripe border ref="equipTableRef" style="width: 100%">
-        <el-table-column type="index" fixed="left" width="50"></el-table-column>
-        <el-table-column prop="pos" label="位置" width="50" fixed="left">
-          <template #default="scope">{{ transNumberToChinese(scope.row.pos + 1) }}</template>
+      <el-table
+        :data="computedList"
+        highlight-current-row
+        stripe
+        border
+        style="width: 100%"
+        @sort-change="onTableSortChange"
+      >
+        <el-table-column
+          type="index"
+          fixed="left"
+          width="50"
+        />
+        <el-table-column
+          prop="pos"
+          label="位置"
+          width="50"
+          fixed="left"
+        >
+          <template #default="scope">
+            {{ transNumberToChinese(scope.row.pos + 1) }}
+          </template>
         </el-table-column>
-        <el-table-column width="50" prop="level" label="等级" fixed="left"></el-table-column>
+        <el-table-column
+          width="50"
+          prop="level"
+          label="等级"
+          fixed="left"
+        />
 
-        <el-table-column label="御魂类型" width="80" fixed="left">
-          <template #default="scope">{{ equipMap[`${scope.row.suit_id}`] }}</template>
+        <el-table-column
+          label="御魂类型"
+          width="80"
+          fixed="left"
+        >
+          <template #default="scope">
+            {{ equipMap[`${scope.row.suit_id}`] }}
+          </template>
         </el-table-column>
 
-        <el-table-column label="主属性" width="130" fixed="left">
+        <el-table-column
+          label="主属性"
+          width="130"
+          fixed="left"
+        >
           <template #default="scope">
             <div class="flex attr-name">
-              <div class="main">{{ transAttrToName(scope.row.mainAttr.type) }}</div>
-              <div v-if="scope.row.single_attrs.length > 0" class="fixed-name">&nbsp;|&nbsp;{{ transAttrToName(scope.row.single_attrs[0].type) }}</div>
+              <div class="main">
+                {{ transAttrToName(scope.row.mainAttr.type) }}
+              </div>
+              <div
+                v-if="scope.row.single_attrs.length > 0"
+                class="fixed-name"
+              >
+                &nbsp;|&nbsp;{{
+                  transAttrToName(scope.row.single_attrs[0].type)
+                }}
+              </div>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="attr.name" min-width="125" align="left" sortable="custom" v-for="attr in effectiveAttrList" :prop="attr.key" :key="attr.key">
+        <el-table-column
+          v-for="attr in effectiveAttrList"
+          :key="attr.key"
+          :label="attr.name"
+          min-width="125"
+          align="left"
+          sortable="custom"
+          :prop="attr.key"
+        >
           <template #default="scope">
             <div class="flex">
               <!-- 主属性 -->
-              <div class="attr-value main" v-if="scope.row.mainAttr.type === attr.key">{{ scope.row.mainAttr.value }}</div>
+              <div
+                v-if="scope.row.mainAttr.type === attr.key"
+                class="attr-value main"
+              >
+                {{ scope.row.mainAttr.value }}
+              </div>
               <!-- 主属性 end -->
               <!-- 副属性 -->
-              <div class="attr-value random" v-if="scope.row[`${attr.key}`]">{{ scope.row.mainAttr.type === attr.key ? '&nbsp;+' : '' }}{{ scope.row[`${attr.key}`].toFixed(2) }}</div>
+              <div
+                v-if="scope.row[`${attr.key}`]"
+                class="attr-value random"
+              >
+                {{ scope.row.mainAttr.type === attr.key ? '&nbsp;+' : ''
+                }}{{ scope.row[`${attr.key}`].toFixed(2) }}
+              </div>
               <!-- 副属性 end-->
               <!-- 固定属性 -->
               <div
+                v-if="
+                  scope.row.single_attrs.length > 0 &&
+                    scope.row.single_attrs[0].type === attr.key
+                "
                 class="attr-value fixed-value"
-                v-if="scope.row.single_attrs.length > 0 && (scope.row.single_attrs[0].type === attr.key)"
-              >&nbsp;+{{ scope.row.single_attrs[0].value }}</div>
+              >
+                &nbsp;+{{ scope.row.single_attrs[0].value }}
+              </div>
               <!-- 固定属性 end -->
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column label="腿" width="50" fixed="right" prop="randomAttrsLength"></el-table-column>
+        <el-table-column
+          label="腿"
+          width="50"
+          fixed="right"
+          prop="randomAttrsLength"
+        />
 
-        <el-table-column label="获得时间" width="150" fixed="right">
+        <el-table-column
+          label="获得时间"
+          width="150"
+          fixed="right"
+        >
           <!-- 导出数据里这个时间是个中时区（+0000）的秒数时间 -->
           <template #default="scope">
             <div class="born-time">
               {{
-                formatTime(new Date((scope.row.born - new Date().getTimezoneOffset() * 60) * 1000), 'YYYY-MM-DD HH:mm')
+                formatTime(
+                  new Date(
+                    (scope.row.born - new Date().getTimezoneOffset() * 60) *
+                      1000,
+                  ),
+                  'YYYY-MM-DD HH:mm',
+                )
               }}
             </div>
           </template>
@@ -101,38 +291,28 @@
     </div>
     <div class="flex center pagination-wrap">
       <el-pagination
-        layout="prev, pager, next, jumper, sizes, total"
         v-model:currentPage="currentPage"
         v-model:pageSize="pageSize"
+        layout="prev, pager, next, jumper, sizes, total"
         :page-sizes="[5, 10, 15, 20, 40, 100]"
         :total="list.length"
-      ></el-pagination>
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default defineComponent({
-  name: 'equipList',
+  name: 'EquipList',
 })
 </script>
 
 <script setup>
+import { defineComponent, ref, nextTick, computed, watch } from 'vue'
+import { useStore } from 'vuex'
 import {
-  defineComponent,
-  ref,
-  nextTick,
-  computed,
-  watch,
-} from 'vue'
-import {
-  useStore,
-} from 'vuex'
-import {
-  ElButton,
   ElCheckboxGroup,
   ElCheckbox,
-  ElMessage,
   ElPagination,
   ElSelect,
   ElOption,
@@ -157,17 +337,19 @@ const transAttrToName = function (attr) {
   return allAttrMap.value[attr]
 }
 
-const transNumberToChinese = function (value) { return util.transNumberToChinese(value) }
+const transNumberToChinese = function (value) {
+  return util.transNumberToChinese(value)
+}
 
 const randomAttrsSelectorList = ref([
   {
     key: '1',
-    name: '4腿'
+    name: '4腿',
   },
   {
     key: '2',
-    name: '瘸腿'
-  }
+    name: '瘸腿',
+  },
 ])
 
 const changeUser = function () {
@@ -177,10 +359,10 @@ const changeUser = function () {
 }
 
 const allAttrList = computed(() => $store.getters.allAttrList)
-let checkAttrList = ref(allAttrList.value.map(item => item.key))
+let checkAttrList = ref(allAttrList.value.map((item) => item.key))
 let isIndeterminateAllAttr = ref(false)
 const handleCheckAllAttrChange = function (bool) {
-  checkAttrList.value = bool ? allAttrList.value.map(item => item.key) : []
+  checkAttrList.value = bool ? allAttrList.value.map((item) => item.key) : []
   isIndeterminateAllAttr.value = false
   currentPage.value = 1
   initData()
@@ -189,7 +371,8 @@ const handleCheckAllAttrChange = function (bool) {
 let checkAllAttr = ref(true)
 const handleCheckedAttrChange = function (value) {
   checkAllAttr.value = allAttrList.value.length === value.length
-  isIndeterminateAllAttr.value = value.length > 0 && value.length < allAttrList.value.length
+  isIndeterminateAllAttr.value =
+    value.length > 0 && value.length < allAttrList.value.length
   currentPage.value = 1
   initData()
 }
@@ -197,7 +380,9 @@ const handleCheckedAttrChange = function (value) {
 let checkLevelList = ref([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 let isIndeterminateAllLevel = ref(false)
 const handleCheckAllLevelChange = function (bool) {
-  checkLevelList.value = bool ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] : []
+  checkLevelList.value = bool
+    ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    : []
   isIndeterminateAllLevel.value = false
   currentPage.value = 1
   initData()
@@ -228,22 +413,20 @@ const handleCheckedPositionChange = function (value) {
   initData()
 }
 
-
 const onTableSortChange = function ({ prop, order }) {
   // 默认按 获得时间 排序
-  let sortMethod = (a, b) => (b.born - a.born)
+  let sortMethod = (a, b) => b.born - a.born
 
   if (order === 'descending') {
     // 从高到低
     sortMethod = (a, b) => util.getAttrSum(b, prop) - util.getAttrSum(a, prop)
-
   } else if (order === 'ascending') {
     // 从低到高
     sortMethod = (a, b) => util.getAttrSum(a, prop) - util.getAttrSum(b, prop)
   } else {
     // 此时order为null
   }
-  list.value = list.value.sort(sortMethod).map(item => item)
+  list.value = list.value.sort(sortMethod).map((item) => item)
 }
 
 let currentPage = ref(1)
@@ -252,14 +435,14 @@ let pageSize = ref(10)
 let list = ref([])
 // 将数据分页。动辄上千行数据，全部渲染的话，会比较耗时
 const computedList = computed(() => {
-  return list.value.length < pageSize.value ?
-    list.value :
-    list.value.slice(
-      (currentPage.value - 1) * pageSize.value,
-      (list.value.length > currentPage.value * pageSize.value
-        ? currentPage.value * pageSize.value
-        : list.value.length)
-    )
+  return list.value.length < pageSize.value
+    ? list.value
+    : list.value.slice(
+        (currentPage.value - 1) * pageSize.value,
+        list.value.length > currentPage.value * pageSize.value
+          ? currentPage.value * pageSize.value
+          : list.value.length,
+      )
 })
 
 const initPageSize = function () {
@@ -285,14 +468,18 @@ const initData = function () {
   const data = userList.value[parseInt(currentUser.value)].data
 
   list.value = data.hero_equips
-    .filter(item => {
-      return (checkAttrList.value.indexOf(item.mainAttr.type) !== -1)
-        && item.quality === 6
-        && (checkLevelList.value.indexOf(item.level) !== -1)
-        && (checkPositionList.value.indexOf(item.pos) !== -1)
-        && (checkEquipType.value > 0 ? (checkEquipType.value === item.suit_id) : true)
+    .filter((item) => {
+      return (
+        checkAttrList.value.indexOf(item.mainAttr.type) !== -1 &&
+        item.quality === 6 &&
+        checkLevelList.value.indexOf(item.level) !== -1 &&
+        checkPositionList.value.indexOf(item.pos) !== -1 &&
+        (checkEquipType.value > 0
+          ? checkEquipType.value === item.suit_id
+          : true)
+      )
     })
-    .filter(item => {
+    .filter((item) => {
       if (randomAttrsLengthFilter.value === '1') {
         return item.randomAttrsLength === 4
       } else if (randomAttrsLengthFilter.value === '2') {
@@ -302,7 +489,10 @@ const initData = function () {
     })
     .sort((a, b) => b.born - a.born)
 
-  if (equipTableRef.value && typeof equipTableRef.value.clearSort === 'function') {
+  if (
+    equipTableRef.value &&
+    typeof equipTableRef.value.clearSort === 'function'
+  ) {
     equipTableRef.value.clearSort()
   }
 }
@@ -311,12 +501,11 @@ initPageSize()
 initData()
 </script>
 
-<style lang="scss"
-       scoped>
-@import "@/assets/css/flex-custom.scss";
-@import "@/assets/css/border-box.scss";
+<style lang="scss" scoped>
+@import '@/assets/css/flex-custom.scss';
+@import '@/assets/css/border-box.scss';
 .page-equip-list {
-  padding: 0 40px 20px;
+  padding: 0 0 20px;
   height: 100%;
   width: 1600px;
   margin: 0 auto;

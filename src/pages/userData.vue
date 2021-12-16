@@ -1,112 +1,221 @@
 <template>
   <div class="page-userData">
     <div>
-      <div style="margin-bottom: 10px;width: 80px;">
+      <div style="margin-bottom: 10px; width: 80px">
         <label for="userDataInput-1">
-          <div class="el-button el-button--primary el-button--mini" style="color:#fff;cursor: pointer;">新增</div>
+          <el-button
+            type="primary"
+            size="mini"
+          >新增</el-button>
         </label>
       </div>
-      <input type="file" style="display: none;" accept="application/json" @change="onUserDataInput($event, -1)" id="userDataInput-1" res="userDataInput-1" />
+      <input
+        id="userDataInput-1"
+        type="file"
+        style="display: none"
+        accept="application/json"
+        res="userDataInput-1"
+        @change="onUserDataInput($event, -1)"
+      >
     </div>
 
     <div class="flex wrap">
-      <el-card class="user-card" v-for="(userItem, index) in user.list" :key="index">
+      <el-card
+        v-for="(userItem, index) in user.list"
+        :key="index"
+        class="user-card"
+      >
         <template #header>
           <div class="flex between">
-            <span>lv.{{ userItem.data.player.level }}&nbsp;{{ userItem.data.player.name }}</span>
+            <span>
+              lv.{{ userItem.data.player.level }}&nbsp;{{
+                userItem.data.player.name
+              }}
+            </span>
             <div class="flex">
               <label :for="`updateInput${index}`">
-                <div style="color:#409EFF;cursor: pointer;">更新</div>
+                <div style="color: #409eff; cursor: pointer">更新</div>
               </label>
               &nbsp;&nbsp;
-              <div style="color: #ef4135;cursor: pointer;" @click="delUser(userItem.data.player)">删除</div>
+              <div
+                style="color: #ef4135; cursor: pointer"
+                @click="delUser(userItem.data.player)"
+              >
+                删除
+              </div>
             </div>
-            <input type="file" style="display:none" accept="application/json" @change="onUserDataInput($event, index)" :id="`updateInput${index}`" :ref="`userDataInput${index}`" />
+            <input
+              :id="`updateInput${index}`"
+              :ref="`userDataInput${index}`"
+              type="file"
+              style="display: none"
+              accept="application/json"
+              @change="onUserDataInput($event, index)"
+            >
           </div>
         </template>
 
         <div class="resources">
           <div class="flex">
-            <div class="resources-key">勾玉</div>
-            <div class="resources-value">{{ userItem.data.currency.jade }}</div>
+            <div class="resources-key">
+              勾玉
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.jade }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">蓝票</div>
-            <div class="resources-value">{{ userItem.data.currency.mystery_amulet }}</div>
+            <div class="resources-key">
+              蓝票
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.mystery_amulet }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">紫票</div>
-            <div class="resources-value">{{ userItem.data.currency.ar_amulet }}</div>
+            <div class="resources-key">
+              紫票
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.ar_amulet }}
+            </div>
           </div>
           <div class="flex">
             <div class>
               预计有&nbsp;{{
-                calcDrawCount(userItem.data.currency.jade, userItem.data.currency.mystery_amulet + userItem.data.currency.ar_amulet)
+                calcDrawCount(
+                  userItem.data.currency.jade,
+                  userItem.data.currency.mystery_amulet +
+                    userItem.data.currency.ar_amulet,
+                )
               }}&nbsp;抽
             </div>
           </div>
-          <br />
+          <br>
           <div class="flex">
-            <div class="resources-key">魂玉</div>
-            <div class="resources-value">{{ userItem.data.currency.s_jade }}</div>
+            <div class="resources-key">
+              魂玉
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.s_jade }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">金蛇皮</div>
-            <div class="resources-value">{{ userItem.data.currency.reverse_scale }}</div>
+            <div class="resources-key">
+              金蛇皮
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.reverse_scale }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">金币</div>
-            <div class="resources-value">{{ userItem.data.currency.coin }}</div>
+            <div class="resources-key">
+              金币
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.coin }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">体力</div>
-            <div class="resources-value">{{ userItem.data.currency.action_point }}</div>
+            <div class="resources-key">
+              体力
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.action_point }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">樱饼</div>
-            <div class="resources-value">{{ userItem.data.currency.auto_point }}</div>
+            <div class="resources-key">
+              樱饼
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.auto_point }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">荣誉</div>
-            <div class="resources-value">{{ userItem.data.currency.honor }}</div>
+            <div class="resources-key">
+              荣誉
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.honor }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">皮肤券</div>
-            <div class="resources-value">{{ userItem.data.currency.skin_token }}</div>
+            <div class="resources-key">
+              皮肤券
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.skin_token }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">SP皮肤券</div>
-            <div class="resources-value">{{ userItem.data.currency.sp_skin_token }}</div>
+            <div class="resources-key">
+              SP皮肤券
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.sp_skin_token }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">痴卷</div>
-            <div class="resources-value">{{ userItem.data.currency.foolery_pass }}</div>
+            <div class="resources-key">
+              痴卷
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.foolery_pass }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">御灵门票</div>
-            <div class="resources-value">{{ userItem.data.currency.totem_pass }}</div>
+            <div class="resources-key">
+              御灵门票
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.totem_pass }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">御札</div>
-            <div class="resources-value">{{ userItem.data.currency.ofuda }}</div>
+            <div class="resources-key">
+              御札
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.ofuda }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">金御札</div>
-            <div class="resources-value">{{ userItem.data.currency.gold_ofuda }}</div>
+            <div class="resources-key">
+              金御札
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.gold_ofuda }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">紫蛇皮</div>
-            <div class="resources-value">{{ userItem.data.currency.scale }}</div>
+            <div class="resources-key">
+              紫蛇皮
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.currency.scale }}
+            </div>
           </div>
 
-          <br />
+          <br>
           <div class="flex start">
-            <div class="resources-key">导出时间</div>
-            <div class="resources-value" style="font-size: 14px;">{{ formatTime(new Date(userItem.timestamp), 'YYYY-MM-DD HH:mm') }}</div>
+            <div class="resources-key">
+              导出时间
+            </div>
+            <div
+              class="resources-value"
+              style="font-size: 14px"
+            >
+              {{ formatTime(new Date(userItem.timestamp), 'YYYY-MM-DD HH:mm') }}
+            </div>
           </div>
           <div class="flex">
-            <div class="resources-key">用户ID</div>
-            <div class="resources-value">{{ userItem.data.player.id }}</div>
+            <div class="resources-key">
+              用户ID
+            </div>
+            <div class="resources-value">
+              {{ userItem.data.player.id }}
+            </div>
           </div>
         </div>
       </el-card>
@@ -116,16 +225,12 @@
 
 <script>
 export default defineComponent({
-  name: 'userData',
+  name: 'UserData',
 })
 </script>
 
 <script setup>
-import {
-  computed,
-  defineComponent,
-  unref,
-} from 'vue'
+import { computed, defineComponent, unref } from 'vue'
 import { useStore } from 'vuex'
 import useCommon from '@/useCommon'
 import { ElMessageBox, ElMessage, ElCard, ElButton } from 'element-plus'
@@ -151,7 +256,7 @@ const onUserDataInput = (e, index) => {
   }
 
   const fileReader = new FileReader()
-  fileReader.onload = e => {
+  fileReader.onload = (e) => {
     const newUserData = JSON.parse(e.target.result)
     const newID = newUserData.data.player.id
     let newUserIndex = index
@@ -166,7 +271,7 @@ const onUserDataInput = (e, index) => {
     // 写入vuex
     $store.commit('user/updateUserDataByIndex', {
       index: newUserIndex,
-      value: newUserData
+      value: newUserData,
     })
 
     // 写入indexed DB
@@ -176,23 +281,26 @@ const onUserDataInput = (e, index) => {
       // 不是新增用户数据的话，不必更新未收录数据
       $store.commit('updateNotIncluded', {
         index: index,
-        value: commonNotIncluded
+        value: commonNotIncluded,
       })
-      updateUserNotIncluded(index,
-        {
-          id: newUserData.data.player.id,
-          value: unref(commonNotIncluded)
-        })
+      updateUserNotIncluded(index, {
+        id: newUserData.data.player.id,
+        value: unref(commonNotIncluded),
+      })
     }
   }
   fileReader.readAsText(file)
 }
 const delUser = (player) => {
-  ElMessageBox.confirm(`确定删除 ${player.name} 吗? 删除数据不可恢复。`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
+  ElMessageBox.confirm(
+    `确定删除 ${player.name} 吗? 删除数据不可恢复。`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    },
+  ).then(() => {
     deleteUserData(player.id).then(() => {
       getUserData()
     })
@@ -243,10 +351,9 @@ const calcDrawCount = (jade, amulet) => {
 }
 </script>
 
-<style lang="scss"
-       scoped>
-@import "@/assets/css/flex-custom.scss";
-@import "@/assets/css/border-box.scss";
+<style lang="scss" scoped>
+@import '@/assets/css/flex-custom.scss';
+@import '@/assets/css/border-box.scss';
 .page-userData {
   padding: 10px 40px 20px;
   height: 100%;
@@ -265,7 +372,7 @@ const calcDrawCount = (jade, amulet) => {
 }
 
 .resources-key {
-  width: 80px;
+  width: 75px;
 }
 
 .resources-value {

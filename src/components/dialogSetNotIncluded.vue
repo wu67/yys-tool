@@ -1,9 +1,25 @@
 <template>
   <div class="dialogSetNotIncluded">
-    <el-dialog :title="`设置未收录 - ${userName}`" v-model="dialogVisible" width="650px" :before-close="handleClose">
-      <el-transfer style="margin: 0 auto;" v-model="checkedData" :data="allData" :titles="['已收录', '未收录']" filterable></el-transfer>
+    <el-dialog
+      v-model="dialogVisible"
+      :title="`设置未收录 - ${userName}`"
+      width="650px"
+      :before-close="handleClose"
+    >
+      <el-transfer
+        v-model="checkedData"
+        style="margin: 0 auto"
+        :data="allData"
+        :titles="['已收录', '未收录']"
+        filterable
+      />
       <div class="flex center">
-        <el-button type="primary" @click="save">保存</el-button>
+        <el-button
+          type="primary"
+          @click="save"
+        >
+          保存
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -12,51 +28,46 @@
 // 对话框 设置未收录
 <script>
 export default defineComponent({
-  name: 'dialogSetNotIncluded',
+  name: 'DialogSetNotIncluded',
 })
 </script>
 <script setup>
-import {
-  defineComponent,
-  ref,
-  watchEffect,
-  unref,
-} from 'vue'
-import {
-  ElButton,
-  ElDialog,
-  ElTransfer,
-} from 'element-plus'
+import { defineComponent, ref, watchEffect, unref } from 'vue'
+import { ElButton, ElDialog, ElTransfer } from 'element-plus'
 
 const props = defineProps({
   notIncluded: {
     type: Array,
-    default() { return [] }
+    default() {
+      return []
+    },
   },
   allHeroList: {
     type: Array,
-    default() { return [] }
+    default() {
+      return []
+    },
   },
   userName: {
     type: String,
-    default: ''
+    default: '',
   },
   modelValue: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue', 'change-not-included'])
 
-const allData = unref(props.allHeroList).map(hero => {
+const allData = unref(props.allHeroList).map((hero) => {
   return {
     key: hero.id,
-    label: hero.name
+    label: hero.name,
   }
 })
 
-const userName = props.userName
+const userName = ref(props.userName.value)
 const handleClose = function (done) {
   emit('update:modelValue', false)
   if (typeof done === 'function') {
@@ -72,7 +83,10 @@ watchEffect(() => {
 })
 
 const save = () => {
-  emit('change-not-included', unref(checkedData).map(item => parseInt(item)))
+  emit(
+    'change-not-included',
+    unref(checkedData).map((item) => parseInt(item)),
+  )
   handleClose()
   dialogVisible.value = false
 }
@@ -91,6 +105,6 @@ const save = () => {
 }
 </style>
 <style lang="scss" scoped>
-@import "@/assets/css/flex-custom.scss";
-@import "@/assets/css/border-box.scss";
+@import '@/assets/css/flex-custom.scss';
+@import '@/assets/css/border-box.scss';
 </style>

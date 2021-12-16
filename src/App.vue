@@ -1,11 +1,24 @@
 <template>
   <el-config-provider :locale="locale">
     <div class="menu-wrap">
-      <el-menu :default-active="currentNav" @select="onMenuSelect" background-color="#545c64" text-color="#eee" active-text-color="#ffd04b" mode="horizontal">
-        <el-menu-item v-for="nav in navList" :index="nav.path" :key="nav.path">{{ nav.name }}</el-menu-item>
+      <el-menu
+        :default-active="currentNav"
+        background-color="#545c64"
+        active-text-color="#ffd04b"
+        text-color="#eee"
+        mode="horizontal"
+        @select="onMenuSelect"
+      >
+        <el-menu-item
+          v-for="nav in navList"
+          :key="nav.path"
+          :index="nav.path"
+        >
+          {{ nav.name }}
+        </el-menu-item>
       </el-menu>
     </div>
-    <router-view v-if="!loading"></router-view>
+    <router-view v-if="!loading" />
   </el-config-provider>
 </template>
 
@@ -16,23 +29,14 @@ export default defineComponent({
 </script>
 
 <script setup>
-import {
-  defineComponent,
-  ref,
-} from 'vue'
+import { defineComponent, ref } from 'vue'
 import useCommon from './useCommon'
 import { useStore } from 'vuex'
-import { useRoute, useRouter } from "vue-router"
+import { useRoute, useRouter } from 'vue-router'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import {
-  ElConfigProvider,
-  ElMenu,
-  ElMenuItem,
-} from "element-plus"
+import { ElConfigProvider, ElMenu, ElMenuItem } from 'element-plus'
 
-const {
-  getUserData,
-} = useCommon()
+const { getUserData } = useCommon()
 const $store = useStore()
 const $route = useRoute()
 const $router = useRouter()
@@ -49,7 +53,7 @@ const navList = ref([
   },
   {
     name: '御魂分析',
-    path: 'equipAnalysis'
+    path: 'equipAnalysis',
   },
   {
     name: '用户数据',
@@ -57,15 +61,15 @@ const navList = ref([
   },
   {
     name: '关于',
-    path: 'aboutThis'
-  }
+    path: 'aboutThis',
+  },
 ])
 
 $store.dispatch('getAllHeroData')
 $store.dispatch('getEquipData')
-
+ 
 const loading = ref(true)
-getUserData().then(userList => {
+getUserData().then((userList) => {
   if (userList.length < 1 && $route.fullPath.indexOf('aboutThis') === -1) {
     loading.value = false
     onMenuSelect('userData')
@@ -76,7 +80,7 @@ getUserData().then(userList => {
   loading.value = false
 
   setTimeout(() => {
-    navList.value.forEach(item => {
+    navList.value.forEach((item) => {
       if ($route.fullPath.indexOf(item.path) !== -1) {
         currentNav.value = item.path
       }
@@ -108,8 +112,8 @@ body {
 </style>
 
 <style lang="scss" scoped>
-@import "@/assets/css/flex-custom.scss";
-@import "@/assets/css/border-box.scss";
+@import '@/assets/css/flex-custom.scss';
+@import '@/assets/css/border-box.scss';
 .menu-wrap {
   padding: 0 calc((100% - 1600px) / 2);
   background-color: #545c64;
