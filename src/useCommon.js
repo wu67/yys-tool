@@ -12,7 +12,7 @@ export default function useCommon() {
 
   const $store = useStore()
 
-  const commonNotIncluded = reactive([360, 359, 337, 336, 319, 313, 314, 310, 309, 308, 305, 294])
+  const commonNotIncluded = reactive([360, 359, 337, 336, 319, 313, 314, 310, 309, 308, 305, 294, 373])
   const formatTime = (date, format = 'YYYY-MM-DD HH:mm:ss') => {
     let str = ''
     if (date) {

@@ -1,6 +1,11 @@
 [
   {
-
+    "name": "夜刀神",
+    "level": "SSR",
+    "interactive": true,
+    "id": 373
+  },
+  {
     "name": "因幡辉夜姬",
     "level": "SP",
     "id": 372
