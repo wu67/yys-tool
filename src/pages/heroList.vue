@@ -161,7 +161,7 @@
         <el-table-column
           label="共有碎片"
           prop="holdings"
-          width="80"
+          width="85"
         />
         <el-table-column
           label="仍缺"

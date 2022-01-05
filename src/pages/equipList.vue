@@ -171,7 +171,7 @@
         <el-table-column
           prop="pos"
           label="位置"
-          width="50"
+          width="60"
           fixed="left"
         >
           <template #default="scope">
@@ -179,7 +179,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          width="50"
+          width="60"
           prop="level"
           label="等级"
           fixed="left"
@@ -187,7 +187,7 @@
 
         <el-table-column
           label="御魂类型"
-          width="80"
+          width="90"
           fixed="left"
         >
           <template #default="scope">
@@ -197,7 +197,7 @@
 
         <el-table-column
           label="主属性"
-          width="130"
+          width="140"
           fixed="left"
         >
           <template #default="scope">
@@ -269,7 +269,7 @@
 
         <el-table-column
           label="获得时间"
-          width="150"
+          width="140"
           fixed="right"
         >
           <!-- 导出数据里这个时间是个中时区（+0000）的秒数时间 -->
