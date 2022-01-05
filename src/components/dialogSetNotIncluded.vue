@@ -67,7 +67,7 @@ const allData = unref(props.allHeroList).map((hero) => {
   }
 })
 
-const userName = ref(props.userName.value)
+// const userName = ref(props.userName)
 const handleClose = function (done) {
   emit('update:modelValue', false)
   if (typeof done === 'function') {
