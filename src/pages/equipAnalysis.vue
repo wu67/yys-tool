@@ -23,12 +23,13 @@
           &gt;=17.5
         </div>
 
+        <!-- style="margin-left: 10px" -->
         <el-tooltip
-          style="margin-left: 10px"
           content="所列速度均为副属性，二号位只显示双速，无速度不予显示，胚子只统计4腿的"
           placement="right"
         >
           <el-tag
+            class="margin-of-speed-tag-tooltip"
             size="mini"
             type="info"
           >
@@ -394,6 +395,11 @@ initData()
 .content-top {
   margin: 0 auto;
   width: 1600px;
+}
+
+.margin-of-speed-tag-tooltip {
+  // element-plus 升级到 1.30 beta5后 el-tooltip组件内联样式及附加的class均失效, 布局样式调整写到其子元素上.
+  margin-left: 10px;
 }
 
 .equip-item {
