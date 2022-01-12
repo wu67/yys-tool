@@ -1,0 +1,23 @@
+name: build yys-tool
+
+on:
+  push:
+    branches: 
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+
+      - name: build
+        run: |
+          yarn
+          yarn build
+      - name: deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
+          CLEAN: true

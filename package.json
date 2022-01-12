@@ -2,6 +2,7 @@
   "name": "yys-tool",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://wu67.github.io/yys-tool",
   "scripts": {
     "build": "vite build",
     "dev": "vite",
