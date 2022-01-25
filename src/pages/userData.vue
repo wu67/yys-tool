@@ -3,11 +3,18 @@
     <div>
       <div style="margin-bottom: 10px; width: 80px">
         <label for="userDataInput-1">
-          <el-button
-            type="primary"
-            size="mini"
-          >新增</el-button>
+          <div
+            class="el-button el-button--primary el-button--mini"
+            style="background-color: #409eff;"
+          >新增</div>
         </label>
+        <el-button
+          style="display: none"
+          type="primary"
+          size="mini"
+        >
+          新增
+        </el-button>
       </div>
       <input
         id="userDataInput-1"
