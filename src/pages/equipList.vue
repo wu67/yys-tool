@@ -42,11 +42,11 @@
         </el-checkbox-group>
       </div>
       <el-tooltip
-        content="本页面只显示6星御魂，非6星不予考虑"
+        :content="'本页面只显示6星御魂, 非6星不予考虑. 收益次数计算仅供参考, 根据自身练度可考虑弃置标红的御魂'"
         placement="left-start"
       >
         <el-tag
-          size="mini"
+          size="small"
           type="info"
         >
           ?
@@ -261,8 +261,30 @@
         </el-table-column>
 
         <el-table-column
+          label="收益"
+          width="80"
+          fixed="right"
+          sortable="custom"
+          prop="effectAttrCount"
+        >
+          <template #default="scope">
+            <div
+              class="ava"
+              :class="{
+                useless: ifEquipUseless(
+                  scope.row.effectAttrCount,
+                  scope.row.level,
+                ),
+              }"
+            >
+              {{ scope.row.effectAttrCount }}
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           label="腿"
-          width="50"
+          width="45"
           fixed="right"
           prop="randomAttrsLength"
         />
@@ -426,6 +448,13 @@ const onTableSortChange = function ({ prop, order }) {
   } else {
     // 此时order为null
   }
+  if (prop === 'effectAttrCount') {
+    if (order === 'descending') {
+      sortMethod = (a, b) => b.effectAttrCount - a.effectAttrCount
+    } else if (order === 'ascending') {
+      sortMethod = (a, b) => a.effectAttrCount - b.effectAttrCount
+    }
+  }
   list.value = list.value.sort(sortMethod).map((item) => item)
 }
 
@@ -444,6 +473,10 @@ const computedList = computed(() => {
           : list.value.length,
       )
 })
+
+const ifEquipUseless = function (count, level) {
+  return (level === 0 && count <= 2) || (level === 15 && count <= 4)
+}
 
 const initPageSize = function () {
   const equipListPageSize = localStorage.getItem('equipListPageSize')
@@ -551,5 +584,9 @@ $fixedAttrColor: #e6a23c;
 
 .pagination-wrap {
   padding: 10px 0;
+}
+
+.useless {
+  color: OrangeRed;
 }
 </style>

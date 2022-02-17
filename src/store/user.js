@@ -11,10 +11,10 @@ export default {
     // 经过处理的用户数据列表
     // eslint-disable-next-line
     list(state, getters, rootState) {
-      return state.list.map(user => {
+      return state.list.map((user) => {
         let newUser = JSON.parse(JSON.stringify(toRaw(user)))
 
-        newUser.data.hero_equips = user.data.hero_equips.map(item => {
+        newUser.data.hero_equips = user.data.hero_equips.map((item) => {
           const result = {
             id: item.id,
             single_attrs: [],
@@ -27,16 +27,29 @@ export default {
             randomAttrsLength: item.random_attrs.length || 0,
             mainAttr: {
               type: item.base_attr.type,
-              value: 0
-            }
+              value: 0,
+            },
+            effectAttrCount: 0,
           }
-
+          const effectiveAttr = rootState.equipList.filter(
+            (suit) => suit.id === item.suit_id,
+          )[0].effectiveAttr
           // 处理副属性
           for (const rAttr of item.random_attrs) {
             if (rootState.notPercentAttr.indexOf(rAttr.type) === -1) {
               result[`${rAttr.type}`] = util.multiply(rAttr.value)
             } else {
               result[`${rAttr.type}`] = rAttr.value
+            }
+            // 计算副属性的有效属性评分. 强化到几次就是几分. 直接用中位数摆烂了.
+            if (effectiveAttr.indexOf(rAttr.type) !== -1) {
+              const attr = rootState.attrList.filter(
+                (a) => a.key === rAttr.type,
+              )[0]
+
+              result.effectAttrCount =
+                result.effectAttrCount +
+                Math.round(result[`${rAttr.type}`] / attr.avgStep)
             }
           }
 
@@ -51,8 +64,12 @@ export default {
           if (item.single_attrs.length > 0) {
             result.single_attrs.push({
               type: item.single_attrs[0].type,
-              value: util.multiply(item.single_attrs[0].value)
+              value: util.multiply(item.single_attrs[0].value),
             })
+            // 御魂评分. 固定属性如果是有效属性, 算3分
+            if (effectiveAttr.indexOf(item.single_attrs[0].type) !== -1) {
+              result.effectAttrCount = result.effectAttrCount + 3
+            }
           }
 
           return result
@@ -60,7 +77,7 @@ export default {
 
         return newUser
       })
-    }
+    },
   },
   actions: {},
   mutations: {
@@ -73,6 +90,6 @@ export default {
       } else {
         state.list[payload.index] = payload.value
       }
-    }
-  }
+    },
+  },
 }
