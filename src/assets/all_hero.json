@@ -1,5 +1,20 @@
 [
   {
+    "name": "迦楼罗",
+    "level": "SR",
+    "id": 378
+  },
+  {
+    "name": "梦寻山兔",
+    "level": "SP",
+    "id": 377
+  },
+  {
+    "name": "铃彦姬",
+    "level": "SSR",
+    "id": 376
+  },
+  {
     "name": "夜刀神",
     "level": "SSR",
     "interactive": true,
