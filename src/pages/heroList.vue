@@ -37,13 +37,11 @@
 
       <div>
         <el-button
-          size="mini"
           @click="checkList = []"
         >
           清空稀有度
         </el-button>
         <el-button
-          size="mini"
           @click="clearFilter"
         >
           重置所有过滤项

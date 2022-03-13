@@ -30,7 +30,6 @@
         >
           <el-tag
             class="margin-of-speed-tag-tooltip"
-            size="mini"
             type="info"
           >
             ?

@@ -3,27 +3,23 @@
     <div>
       <div style="margin-bottom: 10px; width: 80px">
         <label for="userDataInput-1">
-          <div
+          <span
             class="el-button el-button--primary el-button--mini"
-            style="background-color: #409eff;"
-          >新增</div>
+            style="background-color: #409eff"
+          >
+            新增
+          </span>
         </label>
-        <el-button
-          style="display: none"
-          type="primary"
-          size="mini"
-        >
-          新增
-        </el-button>
+        <el-button style="display: none" type="primary">新增</el-button>
       </div>
       <input
         id="userDataInput-1"
         type="file"
         style="display: none"
         accept="application/json"
-        res="userDataInput-1"
+        ref="userDataInput-1"
         @change="onUserDataInput($event, -1)"
-      >
+      />
     </div>
 
     <div class="flex wrap">
@@ -41,15 +37,15 @@
             </span>
             <div class="flex">
               <label :for="`updateInput${index}`">
-                <div style="color: #409eff; cursor: pointer">更新</div>
+                <span style="color: #409eff; cursor: pointer">更新</span>
               </label>
               &nbsp;&nbsp;
-              <div
+              <span
                 style="color: #ef4135; cursor: pointer"
                 @click="delUser(userItem.data.player)"
               >
                 删除
-              </div>
+              </span>
             </div>
             <input
               :id="`updateInput${index}`"
@@ -58,31 +54,25 @@
               style="display: none"
               accept="application/json"
               @change="onUserDataInput($event, index)"
-            >
+            />
           </div>
         </template>
 
         <div class="resources">
           <div class="flex">
-            <div class="resources-key">
-              勾玉
-            </div>
+            <div class="resources-key">勾玉</div>
             <div class="resources-value">
               {{ userItem.data.currency.jade }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              蓝票
-            </div>
+            <div class="resources-key">蓝票</div>
             <div class="resources-value">
               {{ userItem.data.currency.mystery_amulet }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              紫票
-            </div>
+            <div class="resources-key">紫票</div>
             <div class="resources-value">
               {{ userItem.data.currency.ar_amulet }}
             </div>
@@ -93,133 +83,100 @@
                 calcDrawCount(
                   userItem.data.currency.jade,
                   userItem.data.currency.mystery_amulet +
-                    userItem.data.currency.ar_amulet,
+                  userItem.data.currency.ar_amulet,
                 )
               }}&nbsp;抽
             </div>
           </div>
-          <br>
+          <br/>
           <div class="flex">
-            <div class="resources-key">
-              魂玉
-            </div>
+            <div class="resources-key">魂玉</div>
             <div class="resources-value">
               {{ userItem.data.currency.s_jade }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              金蛇皮
-            </div>
+            <div class="resources-key">金蛇皮</div>
             <div class="resources-value">
               {{ userItem.data.currency.reverse_scale }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              金币
-            </div>
+            <div class="resources-key">金币</div>
             <div class="resources-value">
               {{ userItem.data.currency.coin }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              体力
-            </div>
+            <div class="resources-key">体力</div>
             <div class="resources-value">
               {{ userItem.data.currency.action_point }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              樱饼
-            </div>
+            <div class="resources-key">樱饼</div>
             <div class="resources-value">
               {{ userItem.data.currency.auto_point }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              荣誉
-            </div>
+            <div class="resources-key">荣誉</div>
             <div class="resources-value">
               {{ userItem.data.currency.honor }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              皮肤券
-            </div>
+            <div class="resources-key">皮肤券</div>
             <div class="resources-value">
               {{ userItem.data.currency.skin_token }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              SP皮肤券
-            </div>
+            <div class="resources-key">SP皮肤券</div>
             <div class="resources-value">
               {{ userItem.data.currency.sp_skin_token }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              痴卷
-            </div>
+            <div class="resources-key">痴卷</div>
             <div class="resources-value">
               {{ userItem.data.currency.foolery_pass }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              御灵门票
-            </div>
+            <div class="resources-key">御灵门票</div>
             <div class="resources-value">
               {{ userItem.data.currency.totem_pass }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              御札
-            </div>
+            <div class="resources-key">御札</div>
             <div class="resources-value">
               {{ userItem.data.currency.ofuda }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              金御札
-            </div>
+            <div class="resources-key">金御札</div>
             <div class="resources-value">
               {{ userItem.data.currency.gold_ofuda }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              紫蛇皮
-            </div>
+            <div class="resources-key">紫蛇皮</div>
             <div class="resources-value">
               {{ userItem.data.currency.scale }}
             </div>
           </div>
 
-          <br>
+          <br/>
           <div class="flex start">
-            <div class="resources-key">
-              导出时间
-            </div>
-            <div
-              class="resources-value"
-              style="font-size: 14px"
-            >
+            <div class="resources-key">导出时间</div>
+            <div class="resources-value" style="font-size: 14px">
               {{ formatTime(new Date(userItem.timestamp), 'YYYY-MM-DD HH:mm') }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              用户ID
-            </div>
+            <div class="resources-key">用户ID</div>
             <div class="resources-value">
               {{ userItem.data.player.id }}
             </div>

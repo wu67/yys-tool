@@ -119,7 +119,6 @@
           v-if="equipList"
           v-model="checkEquipType"
           clearable
-          size="mini"
           placeholder="可选择过滤种类"
           no-data-text="全部"
           @change="initData"
@@ -140,7 +139,6 @@
         <el-select
           v-model="randomAttrsLengthFilter"
           clearable
-          size="mini"
           placeholder="可选则副属性数量"
           no-data-text="全部"
           @change="initData"
