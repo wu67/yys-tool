@@ -225,7 +225,13 @@
           :prop="attr.key"
         >
           <template #default="scope">
-            <div class="flex">
+            <div class="flex relative">
+              <div
+                v-show="pageSize > 20"
+                class="absolute attr-nick"
+              >
+                {{ attr.nick }}
+              </div>
               <!-- 主属性 -->
               <div
                 v-if="scope.row.mainAttr.type === attr.key"
@@ -540,6 +546,22 @@ initData()
   height: 100%;
   width: 1600px;
   margin: 0 auto;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+.attr-nick {
+  width: 30px;
+  right: 0;
+  bottom: -6px;
+  font-size: 26px;
+  line-height: 36px;
+  opacity: 0.2;
 }
 
 $mainAttrColor: #f56c6c;
