@@ -233,7 +233,7 @@ export default defineComponent({
 </script>
 
 <script lang="ts" setup>
-import { defineComponent, ref, unref, computed } from 'vue'
+import { defineComponent, ref, unref, computed, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import util from '@/utils/index'
 import { ElCard, ElTabs, ElTabPane, ElTag, ElTooltip } from 'element-plus'
@@ -246,7 +246,9 @@ const transNumberToChinese = function (value: number) {
 let loading = ref(false)
 const changeUser = function () {
   loading.value = true
-  initData()
+  nextTick(() => {
+    initData()
+  })
 }
 
 const getImageURL = function (suitCode: number) {
