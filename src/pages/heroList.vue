@@ -280,7 +280,7 @@ const getShards = function () {
 }
 const transformRarityName = function (rarity: string) {
   let result = ''
-  rarityList.value.forEach((item) => {
+  rarityList.value.forEach((item: { value: string; name: string }) => {
     if (item.value == rarity) {
       result = item.name
     }

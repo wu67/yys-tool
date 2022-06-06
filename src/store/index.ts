@@ -97,7 +97,7 @@ export default createStore({
         },
       ],
       notPercentAttr: ['Speed', 'Attack', 'Defense', 'Hp'],
-      notIncludedList: [],
+      notIncludedList: [] as any[],
     }
   },
   getters: {
@@ -175,7 +175,7 @@ export default createStore({
       state.allHeroList = data
     },
     // payload { index: num, value }. index: -1新增， -2整组替换，>-1目标值替换
-    updateNotIncluded(state, payload) {
+    updateNotIncluded(state, payload: { index: number, value: any }) {
       if (payload.index === -1) {
         state.notIncludedList.push(payload.value)
       } else if (payload.index === -2) {

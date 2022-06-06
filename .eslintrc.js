@@ -23,6 +23,7 @@ module.exports = {
     // Enable vue/script-setup-uses-vars rule
     'vue/script-setup-uses-vars': 'error',
     'vue/no-lone-template': 0,
-    'vue/singleline-html-element-content-newline': 0
+    'vue/singleline-html-element-content-newline': 0,
+    'vue/valid-attribute-name': 0
   },
 }
