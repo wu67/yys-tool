@@ -12,7 +12,7 @@
   "dependencies": {
     "dayjs": "^1.11.2",
     "dexie": "^3.2.2",
-    "element-plus": "~2.1.11",
+    "element-plus": "2.2.0",
     "nzh": "^1.0.8",
     "vue": "^3.2.33",
     "vue-router": "^4.0.15",
