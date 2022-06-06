@@ -327,13 +327,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default defineComponent({
   name: 'EquipList',
 })
 </script>
 
-<script setup>
+<script lang="ts" setup>
 import { defineComponent, ref, nextTick, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import {
@@ -351,6 +351,7 @@ import {
 } from 'element-plus'
 import util from '@/utils/index'
 import useCommon from '../useCommon'
+import { IEquipAttrPrototype, IEquipCustom } from '@/interface'
 
 const { formatTime } = useCommon()
 const $store = useStore()
@@ -359,11 +360,11 @@ const effectiveAttrList = computed(() => $store.getters.effectiveAttrList)
 const equipList = computed(() => $store.state.equipList)
 const allAttrMap = computed(() => $store.getters.allAttrMap)
 
-const transAttrToName = function (attr) {
+const transAttrToName = function (attr: string) {
   return allAttrMap.value[attr]
 }
 
-const transNumberToChinese = function (value) {
+const transNumberToChinese = function (value: number) {
   return util.transNumberToChinese(value)
 }
 
@@ -385,17 +386,21 @@ const changeUser = function () {
 }
 
 const allAttrList = computed(() => $store.getters.allAttrList)
-let checkAttrList = ref(allAttrList.value.map((item) => item.key))
+let checkAttrList = ref(
+  allAttrList.value.map((item: IEquipAttrPrototype) => item.key),
+)
 let isIndeterminateAllAttr = ref(false)
-const handleCheckAllAttrChange = function (bool) {
-  checkAttrList.value = bool ? allAttrList.value.map((item) => item.key) : []
+const handleCheckAllAttrChange = function (bool: boolean) {
+  checkAttrList.value = bool
+    ? allAttrList.value.map((item: IEquipAttrPrototype) => item.key)
+    : []
   isIndeterminateAllAttr.value = false
   currentPage.value = 1
   initData()
 }
 
 let checkAllAttr = ref(true)
-const handleCheckedAttrChange = function (value) {
+const handleCheckedAttrChange = function (value: string[]) {
   checkAllAttr.value = allAttrList.value.length === value.length
   isIndeterminateAllAttr.value =
     value.length > 0 && value.length < allAttrList.value.length
@@ -405,7 +410,7 @@ const handleCheckedAttrChange = function (value) {
 
 let checkLevelList = ref([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 let isIndeterminateAllLevel = ref(false)
-const handleCheckAllLevelChange = function (bool) {
+const handleCheckAllLevelChange = function (bool: boolean) {
   checkLevelList.value = bool
     ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     : []
@@ -414,7 +419,7 @@ const handleCheckAllLevelChange = function (bool) {
   initData()
 }
 let checkAllLevel = ref(true)
-const handleCheckedLevelChange = function (value) {
+const handleCheckedLevelChange = function (value: number[]) {
   checkAllLevel.value = 16 === value.length
   isIndeterminateAllLevel.value = value.length > 0 && value.length < 16
   currentPage.value = 1
@@ -426,22 +431,28 @@ let checkAllPosition = ref(true)
 let isIndeterminateAllPosition = ref(false)
 const checkPositionList = ref([0, 1, 2, 3, 4, 5])
 
-const handleCheckAllPositionChange = function (bool) {
+const handleCheckAllPositionChange = function (bool: boolean) {
   checkPositionList.value = bool ? [0, 1, 2, 3, 4, 5] : []
   isIndeterminateAllPosition.value = false
   currentPage.value = 1
   initData()
 }
-const handleCheckedPositionChange = function (value) {
+const handleCheckedPositionChange = function (value: number[]) {
   checkAllPosition.value = 6 === value.length
   isIndeterminateAllPosition.value = value.length > 0 && value.length < 6
   currentPage.value = 1
   initData()
 }
 
-const onTableSortChange = function ({ prop, order }) {
+const onTableSortChange = function ({
+  prop,
+  order,
+}: {
+  prop: string
+  order: string
+}) {
   // 默认按 获得时间 排序
-  let sortMethod = (a, b) => b.born - a.born
+  let sortMethod = (a: IEquipCustom, b: IEquipCustom) => b.born - a.born
 
   if (order === 'descending') {
     // 从高到低
@@ -478,7 +489,7 @@ const computedList = computed(() => {
       )
 })
 
-const ifEquipUseless = function (count, level) {
+const ifEquipUseless = function (count: number, level: number) {
   return (level === 0 && count <= 2) || (level === 15 && count <= 4)
 }
 
@@ -487,25 +498,25 @@ const initPageSize = function () {
   if (equipListPageSize) {
     pageSize.value = parseInt(equipListPageSize)
   } else {
-    localStorage.setItem('equipListPageSize', pageSize.value)
+    localStorage.setItem('equipListPageSize', `${pageSize.value}`)
   }
 }
 
 watch(pageSize, () => {
   currentPage.value = 1
-  localStorage.setItem('equipListPageSize', pageSize.value)
+  localStorage.setItem('equipListPageSize', `${pageSize.value}`)
 })
 
 let currentUser = ref('0')
-let equipTableRef = ref(null)
+let equipTableRef = ref()
 let randomAttrsLengthFilter = ref('')
-let checkEquipType = ref('')
+let checkEquipType = ref()
 const userList = computed(() => $store.getters['user/list'])
 const initData = function () {
   const data = userList.value[parseInt(currentUser.value)].data
 
   list.value = data.hero_equips
-    .filter((item) => {
+    .filter((item: IEquipCustom) => {
       return (
         checkAttrList.value.indexOf(item.mainAttr.type) !== -1 &&
         item.quality === 6 &&
@@ -516,7 +527,7 @@ const initData = function () {
           : true)
       )
     })
-    .filter((item) => {
+    .filter((item: IEquipCustom) => {
       if (randomAttrsLengthFilter.value === '1') {
         return item.randomAttrsLength === 4
       } else if (randomAttrsLengthFilter.value === '2') {
@@ -524,7 +535,7 @@ const initData = function () {
       }
       return true
     })
-    .sort((a, b) => b.born - a.born)
+    .sort((a: IEquipCustom, b: IEquipCustom) => b.born - a.born)
 
   if (
     equipTableRef.value &&

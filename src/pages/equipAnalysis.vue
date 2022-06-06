@@ -7,21 +7,11 @@
           用于分析某一套装的速度短板，方便赌魂/爆肝
         </div>
 
-        <div class="analysis-value neck">
-          &gt;13.5
-        </div>
-        <div class="analysis-value full">
-          &gt;15
-        </div>
-        <div class="analysis-value rare">
-          &gt;16.5
-        </div>
-        <div class="analysis-value extreme">
-          &gt;=17
-        </div>
-        <div class="analysis-value european">
-          &gt;=17.5
-        </div>
+        <div class="analysis-value neck">&gt;13.5</div>
+        <div class="analysis-value full">&gt;15</div>
+        <div class="analysis-value rare">&gt;16.5</div>
+        <div class="analysis-value extreme">&gt;=17</div>
+        <div class="analysis-value european">&gt;=17.5</div>
 
         <!-- style="margin-left: 10px" -->
         <el-tooltip
@@ -236,19 +226,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default defineComponent({
   name: 'EquipAnalysis',
 })
 </script>
 
-<script setup>
+<script lang="ts" setup>
 import { defineComponent, ref, unref, computed } from 'vue'
 import { useStore } from 'vuex'
 import util from '@/utils/index'
 import { ElCard, ElTabs, ElTabPane, ElTag, ElTooltip } from 'element-plus'
+import { IEquipCustom, SubAttr, IEquipTypePrototype } from '@/interface'
 
-const transNumberToChinese = function (value) {
+const transNumberToChinese = function (value: number) {
   return util.transNumberToChinese(value)
 }
 
@@ -258,7 +249,7 @@ const changeUser = function () {
   initData()
 }
 
-const getImageURL = function (suitCode) {
+const getImageURL = function (suitCode: number) {
   return new URL(`/src/assets/suit_icon/${suitCode}.png`, import.meta.url).href
 }
 
@@ -271,9 +262,31 @@ const importantSuit = ref([
   300002, 300010, 300012, 300019, 300021, 300023, 300034, 300079, 300080,
 ])
 let currentUser = ref('0')
-let aData = ref([])
+
+interface suitData {
+  name: string
+  id: number
+  position: suitPositionData[][]
+  // position: [
+  //   suitPositionData[],
+  //   suitPositionData[],
+  //   suitPositionData[],
+  //   suitPositionData[],
+  //   suitPositionData[],
+  //   suitPositionData[],
+  // ]
+}
+interface suitPositionData {
+  name?: string
+  mainAttr: {
+    type: string
+    value: number
+  }
+  value: number
+}
+let aData = ref<suitData[]>([])
 // 散件速度计算
-let scatteredSuit = ref([])
+let scatteredSuit = ref<number[]>([])
 // 16满速个数统计
 let fullCount = ref(0)
 let fullCount15 = ref(0)
@@ -289,20 +302,20 @@ const initData = function (attrName = 'Speed') {
   doubleSpeedPrototypeCount.value = 0
   loading.value = true
   // 散件
-  let scatteredSuitData = {
+  let scatteredSuitData: suitData = {
     name: '散件',
-    id: '-111',
+    id: -111,
     position: [[], [], [], [], [], []],
   }
-  aData.value = equipList.value.map((equip) => {
-    const finalEquipData = {
+  aData.value = equipList.value.map((equip: IEquipTypePrototype) => {
+    const finalEquipData: suitData = {
       ...equip,
       // 6个位置，按属性排序
       position: [[], [], [], [], [], []],
     }
 
     userList.value[parseInt(currentUser.value)].data.hero_equips.forEach(
-      (item) => {
+      (item: IEquipCustom & SubAttr) => {
         if (item.suit_id === equip.id) {
           let sum = util.getAttrSum(unref(item), attrName)
 
@@ -355,7 +368,7 @@ const initData = function (attrName = 'Speed') {
   })
   aData.value.unshift(scatteredSuitData)
   // 散件总速度计算
-  scatteredSuit.value = scatteredSuitData.position.reduce((total, current) => {
+  scatteredSuit.value = scatteredSuitData.position.reduce((total: number[], current) => {
     total[0] = (current[0].value || 0) + (total[0] || 0)
     total[1] = (current[1].value || 0) + (total[1] || 0)
     total[2] = (current[2].value || 0) + (total[2] || 0)

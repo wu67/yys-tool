@@ -36,16 +36,8 @@
       </div>
 
       <div>
-        <el-button
-          @click="checkList = []"
-        >
-          清空稀有度
-        </el-button>
-        <el-button
-          @click="clearFilter"
-        >
-          重置所有过滤项
-        </el-button>
+        <el-button @click="checkList = []">清空稀有度</el-button>
+        <el-button @click="clearFilter">重置所有过滤项</el-button>
       </div>
     </div>
 
@@ -118,8 +110,8 @@
           <el-table-column
             :key="`included${userIndex}`"
             :filters="[
-              { text: '已收录', value: 1 },
-              { text: '未收录', value: 0 },
+              { text: '已收录', value: '1' },
+              { text: '未收录', value: '0' },
             ]"
             :filter-method="
               (value, row) => filterIncluded(value, row, userIndex)
@@ -128,24 +120,26 @@
           >
             <template #default="scope">
               <div
-                :class="{ 'not-included': scope.row.included[userIndex] === 0 }"
+                :class="{
+                  'not-included': scope.row.included[userIndex] === '0',
+                }"
               >
-                {{ scope.row.included[userIndex] === 1 ? '' : '未收录' }}
+                {{ scope.row.included[userIndex] === '1' ? '' : '未收录' }}
               </div>
             </template>
           </el-table-column>
           <el-table-column
             :key="`have${userIndex}`"
             :filters="[
-              { text: '仓库中有', value: 1 },
-              { text: '仓库中无', value: 0 },
+              { text: '仓库中有', value: '1' },
+              { text: '仓库中无', value: '0' },
             ]"
             :filter-method="(value, row) => filterHave(value, row, userIndex)"
             :label="`仓检`"
           >
             <template #default="scope">
-              <div :class="{ 'have-not': scope.row.have[userIndex] === 0 }">
-                {{ scope.row.have[userIndex] === 1 ? '' : '仓库中无' }}
+              <div :class="{ 'have-not': scope.row.have[userIndex] === '0' }">
+                {{ scope.row.have[userIndex] === '1' ? '' : '仓库中无' }}
               </div>
             </template>
           </el-table-column>
@@ -171,12 +165,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default defineComponent({
   name: 'HeroList',
 })
 </script>
-<script setup>
+<script lang="ts" setup>
 import { defineComponent, ref, unref, computed } from 'vue'
 import { useStore } from 'vuex'
 import {
@@ -189,6 +183,7 @@ import {
 } from 'element-plus'
 import dialogSetNotIncluded from '@/components/dialogSetNotIncluded.vue'
 import useCommon from '../useCommon'
+import { IBaseHero, IHero, hero_book_shards } from '@/interface'
 
 const { updateUserNotIncluded, getNotIncluded } = useCommon()
 const $store = useStore()
@@ -227,49 +222,45 @@ const rarityList = ref([
   },
 ])
 let shards = ref([])
-let heroIdList = ref([])
+type HeroList = number[]
+let heroIdList = ref<HeroList[]>([])
 const getShards = function () {
   shards.value = allHeroList.value
-    .sort((a, b) => b.id - a.id)
-    .map((item) => {
-      let obj = {
+    .sort((a: IBaseHero, b: IBaseHero) => b.id - a.id)
+    .map((item: IBaseHero) => {
+      let obj: IHero = {
         name: item.name,
         rarity: item.rarity,
         id: item.id,
         shards: [],
-        // 收录状态. 手动维护额外数据(未收录id), 导出器和痒痒熊导出的数据无法判断是否为已收录, 只能判断当前仓库中有没有该卡.
         included: [],
-        // 当前 式神录/仓库 中是否存在该卡
         have: [],
-        // 需求量。所有账号共计
         required: 0,
-        // 持有量。所有账号共计
         holdings: 0,
+        bookMaxShards: 0,
       }
       // 联动
       if (item.interactive === true) {
         obj.interactive = true
       }
 
-      userList.value.forEach((user, index) => {
+      userList.value.forEach((user: any, index: number) => {
         // 处理持有的碎片和召唤所需碎片数
-        user.data.hero_book_shards.forEach((hero) => {
+        user.data.hero_book_shards.forEach((hero: hero_book_shards) => {
           if (obj.id === hero.hero_id) {
             obj.bookMaxShards = hero.book_max_shards
             obj.shards[index] = hero.shards
           }
         })
 
-        heroIdList[index] = Array.from(
-          new Set(user.data.heroes.map((item) => item.hero_id)),
+        heroIdList.value[index] = Array.from(
+          new Set(user.data.heroes.map((item: any) => item.hero_id)),
         )
 
         obj.included[index] =
-          unref(notIncludedList)[index].indexOf(parseInt(item.id)) !== -1
-            ? 0
-            : 1
+          unref(notIncludedList)[index].indexOf(item.id) !== -1 ? '0' : '1'
         obj.have[index] =
-          heroIdList[index].indexOf(parseInt(item.id)) !== -1 ? 1 : 0
+          heroIdList.value[index].indexOf(item.id) !== -1 ? '1' : '0'
       })
 
       obj.holdings = obj.shards.reduce((sum, current) => {
@@ -279,7 +270,7 @@ const getShards = function () {
 
       const notIncludedCount = obj.included.reduce((sum, current) => {
         // 检查收录状态，根据收录状态计算总需求量
-        return current === 0 ? ++sum : sum
+        return current === '0' ? ++sum : sum
       }, 0)
 
       const temp = obj.bookMaxShards * notIncludedCount - obj.holdings
@@ -287,7 +278,7 @@ const getShards = function () {
       return obj
     })
 }
-const transformRarityName = function (rarity) {
+const transformRarityName = function (rarity: string) {
   let result = ''
   rarityList.value.forEach((item) => {
     if (item.value == rarity) {
@@ -301,11 +292,11 @@ let checkList = ref(['SP', 'SSR'])
 const computedShardsList = computed(() => {
   let result = []
   if (checkList.value.indexOf('INTERACTIVE') !== -1) {
-    result = shards.value.filter((item) => {
+    result = shards.value.filter((item: IHero) => {
       return checkList.value.indexOf(item.rarity) !== -1 || item.interactive
     })
   } else {
-    result = shards.value.filter((item) => {
+    result = shards.value.filter((item: IHero) => {
       return (
         checkList.value.indexOf(item.rarity) !== -1 &&
         !(typeof item.interactive !== 'undefined')
@@ -316,38 +307,38 @@ const computedShardsList = computed(() => {
 })
 
 let isIndeterminate = ref(true)
-const handleCheckAllChange = function (val) {
+const handleCheckAllChange = function (val: boolean) {
   checkList.value = val ? rarityList.value.map((item) => item.value) : []
   isIndeterminate.value = false
 }
 
 let checkAll = ref(false)
-const handleCheckedRarityChange = function (value) {
+const handleCheckedRarityChange = function (value: string[]) {
   checkAll.value = value.length === rarityList.value.length
   isIndeterminate.value =
     value.length > 0 && value.length < rarityList.value.length
 }
 
-let shardTableRef = ref(null)
+let shardTableRef = ref()
 const clearFilter = function () {
   shardTableRef.value.clearFilter()
 }
-const filterIncluded = function (value, row, index) {
+const filterIncluded = function (value: any, row: any, index: number) {
   return value === row.included[index]
 }
-const filterHave = function (value, row, index) {
+const filterHave = function (value: any, row: any, index: number) {
   return value === row.have[index]
 }
 
 let currentEditNotIncludedUserIndex = ref(-1)
 let dialogSetNotIncludedVisible = ref(false)
 
-const setNotIncluded = function (userIndex) {
+const setNotIncluded = function (userIndex: number) {
   currentEditNotIncludedUserIndex.value = userIndex
   dialogSetNotIncludedVisible.value = true
 }
 
-const changeNotIncluded = function (newCheckedData) {
+const changeNotIncluded = function (newCheckedData: number[]) {
   $store.commit('updateNotIncluded', {
     index: currentEditNotIncludedUserIndex.value,
     value: newCheckedData,
@@ -360,7 +351,7 @@ const changeNotIncluded = function (newCheckedData) {
       ElMessage.success(`设置未收录成功`)
       getShards()
     })
-    .catch((e) => {
+    .catch((e: Error) => {
       ElMessage.error(e.message || '设置未收录出错')
     })
 }

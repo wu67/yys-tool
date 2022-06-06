@@ -23,7 +23,7 @@
         type="file"
         style="display: none"
         accept="application/json"
-        @change="onUserDataInput($event, -1)"
+        @change="($event) => onUserDataInput($event, -1)"
       >
     </div>
 
@@ -58,32 +58,26 @@
               type="file"
               style="display: none"
               accept="application/json"
-              @change="onUserDataInput($event, index)"
+              @change="($event) => onUserDataInput($event, index)"
             >
           </div>
         </template>
 
         <div class="resources">
           <div class="flex">
-            <div class="resources-key">
-              勾玉
-            </div>
+            <div class="resources-key">勾玉</div>
             <div class="resources-value">
               {{ userItem.data.currency.jade }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              蓝票
-            </div>
+            <div class="resources-key">蓝票</div>
             <div class="resources-value">
               {{ userItem.data.currency.mystery_amulet }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              紫票
-            </div>
+            <div class="resources-key">紫票</div>
             <div class="resources-value">
               {{ userItem.data.currency.ar_amulet }}
             </div>
@@ -101,105 +95,79 @@
           </div>
           <br>
           <div class="flex">
-            <div class="resources-key">
-              魂玉
-            </div>
+            <div class="resources-key">魂玉</div>
             <div class="resources-value">
               {{ userItem.data.currency.s_jade }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              金蛇皮
-            </div>
+            <div class="resources-key">金蛇皮</div>
             <div class="resources-value">
               {{ userItem.data.currency.reverse_scale }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              金币
-            </div>
+            <div class="resources-key">金币</div>
             <div class="resources-value">
               {{ userItem.data.currency.coin }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              体力
-            </div>
+            <div class="resources-key">体力</div>
             <div class="resources-value">
               {{ userItem.data.currency.action_point }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              樱饼
-            </div>
+            <div class="resources-key">樱饼</div>
             <div class="resources-value">
               {{ userItem.data.currency.auto_point }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              荣誉
-            </div>
+            <div class="resources-key">荣誉</div>
             <div class="resources-value">
               {{ userItem.data.currency.honor }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              皮肤券
-            </div>
+            <div class="resources-key">皮肤券</div>
             <div class="resources-value">
               {{ userItem.data.currency.skin_token }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              SP皮肤券
-            </div>
+            <div class="resources-key">SP皮肤券</div>
             <div class="resources-value">
               {{ userItem.data.currency.sp_skin_token }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              痴卷
-            </div>
+            <div class="resources-key">痴卷</div>
             <div class="resources-value">
               {{ userItem.data.currency.foolery_pass }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              御灵门票
-            </div>
+            <div class="resources-key">御灵门票</div>
             <div class="resources-value">
               {{ userItem.data.currency.totem_pass }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              御札
-            </div>
+            <div class="resources-key">御札</div>
             <div class="resources-value">
               {{ userItem.data.currency.ofuda }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              金御札
-            </div>
+            <div class="resources-key">金御札</div>
             <div class="resources-value">
               {{ userItem.data.currency.gold_ofuda }}
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              紫蛇皮
-            </div>
+            <div class="resources-key">紫蛇皮</div>
             <div class="resources-value">
               {{ userItem.data.currency.scale }}
             </div>
@@ -207,9 +175,7 @@
 
           <br>
           <div class="flex start">
-            <div class="resources-key">
-              导出时间
-            </div>
+            <div class="resources-key">导出时间</div>
             <div
               class="resources-value"
               style="font-size: 14px"
@@ -218,9 +184,7 @@
             </div>
           </div>
           <div class="flex">
-            <div class="resources-key">
-              用户ID
-            </div>
+            <div class="resources-key">用户ID</div>
             <div class="resources-value">
               {{ userItem.data.player.id }}
             </div>
@@ -231,13 +195,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default defineComponent({
   name: 'UserData',
 })
 </script>
 
-<script setup>
+<script lang="ts" setup>
 import { computed, defineComponent, unref } from 'vue'
 import { useStore } from 'vuex'
 import useCommon from '@/useCommon'
@@ -255,7 +219,7 @@ const {
 const $store = useStore()
 const user = computed(() => $store.state.user)
 
-const onUserDataInput = (e, index) => {
+const onUserDataInput = (e: any, index: number) => {
   const files = e.target.files || e.dataTransfer.files
   const file = files[0]
   if (file.type !== 'application/json') {
@@ -265,11 +229,14 @@ const onUserDataInput = (e, index) => {
 
   const fileReader = new FileReader()
   fileReader.onload = (e) => {
-    const newUserData = JSON.parse(e.target.result)
+    let newUserData:any = {}
+    if (e.target && e.target.result) {
+      newUserData = JSON.parse(e.target.result as string)
+    }
     const newID = newUserData.data.player.id
     let newUserIndex = index
 
-    user.value.list.forEach((userItem, currentIndex) => {
+    user.value.list.forEach((userItem: any, currentIndex: number) => {
       if (userItem.data.player.id === newID) {
         // 说明该ID已经在数据库中了, 此时不是新增, 而应是更新
         newUserIndex = currentIndex
@@ -299,7 +266,7 @@ const onUserDataInput = (e, index) => {
   }
   fileReader.readAsText(file)
 }
-const delUser = (player) => {
+const delUser = (player: any) => {
   ElMessageBox.confirm(
     `确定删除 ${player.name} 吗? 删除数据不可恢复。`,
     '提示',
@@ -315,7 +282,7 @@ const delUser = (player) => {
   })
 }
 // 预计可抽卡次数
-const calcDrawCount = (jade, amulet) => {
+const calcDrawCount = (jade: number, amulet: number) => {
   const temp = Math.floor(jade / 1000) * 11 + amulet
   // 不足一千勾的零散勾玉
   let restJade = jade % 1000

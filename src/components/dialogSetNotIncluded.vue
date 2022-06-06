@@ -26,13 +26,14 @@
 </template>
 
 // 对话框 设置未收录
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'DialogSetNotIncluded',
 })
 </script>
-<script setup>
-import { defineComponent, ref, watchEffect, unref } from 'vue'
+<script lang="ts" setup>
+import { ref, watchEffect, unref } from 'vue'
 import { ElButton, ElDialog, ElTransfer } from 'element-plus'
 
 const props = defineProps({
@@ -60,22 +61,28 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change-not-included'])
 
-const allData = unref(props.allHeroList).map((hero) => {
+interface IAllData {
+  key: number
+  label: string
+  // 这个属性其实在当前业务场景无用. 只是框架需要校验这个类型.
+  disabled: boolean
+}
+const allData: IAllData[] = unref(props.allHeroList).map((hero: any) => {
   return {
     key: hero.id,
     label: hero.name,
+    disabled: false
   }
 })
 
-// const userName = ref(props.userName)
-const handleClose = function (done) {
+const handleClose = function (done: any) {
   emit('update:modelValue', false)
   if (typeof done === 'function') {
     done()
   }
 }
 
-const checkedData = ref(props.notIncluded)
+const checkedData: any = ref(props.notIncluded)
 const dialogVisible = ref(false)
 
 watchEffect(() => {
@@ -85,9 +92,9 @@ watchEffect(() => {
 const save = () => {
   emit(
     'change-not-included',
-    unref(checkedData).map((item) => parseInt(item)),
+    unref(checkedData).map((item: any) => parseInt(`${item}`)),
   )
-  handleClose()
+  handleClose(false)
   dialogVisible.value = false
 }
 </script>

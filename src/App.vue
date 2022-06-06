@@ -22,13 +22,13 @@
   </el-config-provider>
 </template>
 
-<script>
+<script lnag="ts">
 export default defineComponent({
   name: 'App',
 })
 </script>
 
-<script setup>
+<script lnag="ts" setup>
 import { defineComponent, ref } from 'vue'
 import useCommon from './useCommon'
 import { useStore } from 'vuex'
@@ -67,7 +67,7 @@ const navList = ref([
 
 $store.dispatch('getAllHeroData')
 $store.dispatch('getEquipData')
- 
+
 const loading = ref(true)
 getUserData().then((userList) => {
   if (userList.length < 1 && $route.fullPath.indexOf('aboutThis') === -1) {
