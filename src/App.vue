@@ -34,7 +34,7 @@ import useCommon from './useCommon'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import { ElConfigProvider, ElMenu, ElMenuItem } from 'element-plus'
+import { ElConfigProvider, ElMenu, ElMenuItem, ElMessage } from 'element-plus'
 
 const { getUserData } = useCommon()
 const $store = useStore()
@@ -89,9 +89,13 @@ getUserData().then((userList) => {
 })
 
 const onMenuSelect = (path) => {
-  if ($route.fullPath.indexOf(path) === -1) {
-    $router.replace(`/${path}`)
-  }
+  getUserData().then((userList) => {
+    if (userList.length < 1 && ['aboutThis', 'userData'].indexOf(path) === -1) {
+      ElMessage.info('未读取到游戏数据')
+    } else if ($route.fullPath.indexOf(path) === -1) {
+      $router.replace(`/${path}`)
+    }
+  })
 }
 
 const locale = ref(zhCn)
