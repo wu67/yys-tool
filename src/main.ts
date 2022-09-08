@@ -10,5 +10,6 @@ app.use(store)
 import { ElLoading } from 'element-plus'
 app.use(ElLoading)
 import 'element-plus/dist/index.css'
+import '@/assets/css/element-hack.scss'
 
 app.mount('#app')
