@@ -1,8 +1,30 @@
 [
   {
+    "name": "神启荒",
+    "level": "SP",
+    "id": 390
+  },
+  {
+    "name": "须佐之男",
+    "level": "SSR",
+    "id": 389
+  },
+  {
     "name": "心狩鬼女红叶",
     "level": "SP",
     "id": 388
+  },
+  {
+    "name": "嘴平伊之助",
+    "level": "SSR",
+    "interactive": true,
+    "id": 387
+  },
+  {
+    "name": "我妻善逸",
+    "level": "SSR",
+    "interactive": true,
+    "id": 386
   },
   {
     "name": "大夜摩天阎魔",

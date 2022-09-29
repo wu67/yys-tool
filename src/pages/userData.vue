@@ -191,6 +191,7 @@
           </div>
         </div>
       </el-card>
+      <say-goodbye v-if="user.list.length < 1" />
     </div>
   </div>
 </template>
@@ -206,6 +207,7 @@ import { computed, defineComponent, unref } from 'vue'
 import { useStore } from 'vuex'
 import useCommon from '@/useCommon'
 import { ElMessageBox, ElMessage, ElCard, ElButton } from 'element-plus'
+import sayGoodbye from '@/components/goodbye.vue'
 
 const {
   commonNotIncluded,
@@ -229,7 +231,7 @@ const onUserDataInput = (e: any, index: number) => {
 
   const fileReader = new FileReader()
   fileReader.onload = (e) => {
-    let newUserData:any = {}
+    let newUserData: any = {}
     if (e.target && e.target.result) {
       newUserData = JSON.parse(e.target.result as string)
     }
