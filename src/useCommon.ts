@@ -47,6 +47,7 @@ export default function useCommon() {
       })
       .catch(() => {
         console.log('getUserData error')
+        return []
       })
   }
   const deleteUserData = (id: number | string) => {

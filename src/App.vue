@@ -45,6 +45,12 @@ const $route = useRoute()
 const $router = useRouter()
 
 const currentNav = ref('')
+
+interface iNavItem {
+  name: string
+  path: string
+}
+
 const navList = ref([
   {
     name: '碎片列表',
@@ -83,7 +89,7 @@ getUserData().then((userList) => {
   loading.value = false
 
   setTimeout(() => {
-    navList.value.forEach((item) => {
+    navList.value.forEach((item: iNavItem) => {
       if ($route.fullPath.indexOf(item.path) !== -1) {
         currentNav.value = item.path
       }
