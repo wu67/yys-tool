@@ -22,13 +22,16 @@
   </el-config-provider>
 </template>
 
-<script lnag="ts">
+<script lang="ts">
 export default defineComponent({
   name: 'App',
 })
 </script>
 
-<script lnag="ts" setup>
+<script
+  lang="ts"
+  setup
+>
 import { defineComponent, ref } from 'vue'
 import useCommon from './useCommon'
 import { useStore } from 'vuex'
@@ -88,7 +91,7 @@ getUserData().then((userList) => {
   }, 500)
 })
 
-const onMenuSelect = (path) => {
+const onMenuSelect = (path: string) => {
   getUserData().then((userList) => {
     if (userList.length < 1 && ['aboutThis', 'userData'].indexOf(path) === -1) {
       ElMessage.info('未读取到游戏数据')
