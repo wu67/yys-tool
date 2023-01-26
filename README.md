@@ -25,16 +25,13 @@ npm run build
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-## or use docker
-```bash
-docker pull node:18.12.1-slim
-```
+## use docker
 
 ```bash
 docker build -t yys_tool:dev .
 ```
 
 ```bash
-docker run -d -p 8888:8888 -v ${PWD}:/app -v /app/node_modules --name yys_tool yys_tool:dev
+docker run -d -p 8888:8888 -v ${PWD}:/app --name yys_tool yys_tool:dev
 ```
 

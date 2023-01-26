@@ -1,8 +1,6 @@
-FROM node:18.12.1-slim
-#ENV CHOKIDAR_USEPOLLING=true
+FROM node:lts
 RUN  mkdir -p /app
 WORKDIR /app
 COPY package.json .
-RUN npm --registry=https://registry.npmmirror.com install
-CMD npm run dev
+CMD (npm --registry=https://registry.npmmirror.com i) && npm run dev
 EXPOSE 8888
