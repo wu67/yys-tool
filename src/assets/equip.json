@@ -319,5 +319,35 @@
     "id": 300084,
     "effectiveAttr": ["Speed", "CritRate", "AttackRate", "CritPower", "HpRate"],
     "name": "出世螺"
+  },
+  {
+    "id": 300085,
+    "effectiveAttr": ["Speed"],
+    "name": "火之车"
+  },
+  {
+    "id": 300086,
+    "effectiveAttr": ["Speed", "CritRate", "AttackRate", "CritPower"],
+    "name": "隐念"
+  },
+  {
+    "id": 300087,
+    "effectiveAttr": ["Speed", "CritRate"],
+    "name": "叠叩"
+  },
+  {
+    "id": 300088,
+    "effectiveAttr": ["Speed", "CritRate", "AttackRate", "CritPower"],
+    "name": "应声虫"
+  },
+  {
+    "id": 300089,
+    "effectiveAttr": ["Speed", "EffectHitRate"],
+    "name": "元兴寺"
+  },
+  {
+    "id": 300090,
+    "effectiveAttr": ["Speed", "DefenseRate"],
+    "name": "钓瓶火"
   }
 ]
