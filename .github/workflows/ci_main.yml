@@ -2,22 +2,50 @@ name: build yys-tool
 
 on:
   push:
-    branches: 
+    branches:
       - main
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+permissions:
+  contents: read
+  pages: write # to deploy to Pages
+  id-token: write
+
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - name: checkout code
+        uses: actions/checkout@main
 
-      - name: build
-        run: |
-          npm i
-          npm run build
-      - name: deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v4
+      - name: actions/setup-node@v3
+        uses: actions/setup-node@v3
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist
-          CLEAN: true
+          node-version: "18.15.0"
+
+      - name: npm_run_build
+        run: |
+          npm i && npm run build
+
+      - name: upload files
+        uses: actions/upload-pages-artifact@v1
+        with:
+          name: build-dist
+          path: dist
+          retention-days: 1
+
+  Deploy:
+    needs: Build
+    environment:
+      name: gh-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+        with:
+          artifact_name: build-dist
