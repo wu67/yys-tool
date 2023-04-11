@@ -351,7 +351,11 @@ import {
 } from 'element-plus'
 import util from '@/utils/index'
 import useCommon from '../useCommon'
-import { IEquipAttrPrototype, IEquipCustom } from '@/interface'
+import {
+  IEquipAttrPrototype,
+  IEquipCustom,
+  CheckboxValueType,
+} from '@/interface'
 
 const { formatTime } = useCommon()
 const $store = useStore()
@@ -390,7 +394,7 @@ let checkAttrList = ref(
   allAttrList.value.map((item: IEquipAttrPrototype) => item.key),
 )
 let isIndeterminateAllAttr = ref(false)
-const handleCheckAllAttrChange = function (bool: boolean) {
+const handleCheckAllAttrChange = function (bool: CheckboxValueType) {
   checkAttrList.value = bool
     ? allAttrList.value.map((item: IEquipAttrPrototype) => item.key)
     : []
@@ -400,7 +404,7 @@ const handleCheckAllAttrChange = function (bool: boolean) {
 }
 
 let checkAllAttr = ref(true)
-const handleCheckedAttrChange = function (value: string[]) {
+const handleCheckedAttrChange = function (value: CheckboxValueType[]) {
   checkAllAttr.value = allAttrList.value.length === value.length
   isIndeterminateAllAttr.value =
     value.length > 0 && value.length < allAttrList.value.length
@@ -410,7 +414,7 @@ const handleCheckedAttrChange = function (value: string[]) {
 
 let checkLevelList = ref([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
 let isIndeterminateAllLevel = ref(false)
-const handleCheckAllLevelChange = function (bool: boolean) {
+const handleCheckAllLevelChange = function (bool: CheckboxValueType) {
   checkLevelList.value = bool
     ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     : []
@@ -419,7 +423,7 @@ const handleCheckAllLevelChange = function (bool: boolean) {
   initData()
 }
 let checkAllLevel = ref(true)
-const handleCheckedLevelChange = function (value: number[]) {
+const handleCheckedLevelChange = function (value: CheckboxValueType[]) {
   checkAllLevel.value = 16 === value.length
   isIndeterminateAllLevel.value = value.length > 0 && value.length < 16
   currentPage.value = 1
@@ -431,13 +435,13 @@ let checkAllPosition = ref(true)
 let isIndeterminateAllPosition = ref(false)
 const checkPositionList = ref([0, 1, 2, 3, 4, 5])
 
-const handleCheckAllPositionChange = function (bool: boolean) {
+const handleCheckAllPositionChange = function (bool: CheckboxValueType) {
   checkPositionList.value = bool ? [0, 1, 2, 3, 4, 5] : []
   isIndeterminateAllPosition.value = false
   currentPage.value = 1
   initData()
 }
-const handleCheckedPositionChange = function (value: number[]) {
+const handleCheckedPositionChange = function (value: CheckboxValueType[]) {
   checkAllPosition.value = 6 === value.length
   isIndeterminateAllPosition.value = value.length > 0 && value.length < 6
   currentPage.value = 1

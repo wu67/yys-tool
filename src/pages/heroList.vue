@@ -183,7 +183,12 @@ import {
 } from 'element-plus'
 import dialogSetNotIncluded from '@/components/dialogSetNotIncluded.vue'
 import useCommon from '../useCommon'
-import { IBaseHero, IHero, hero_book_shards } from '@/interface'
+import {
+  IBaseHero,
+  IHero,
+  hero_book_shards,
+  CheckboxValueType,
+} from '@/interface'
 
 const { updateUserNotIncluded, getNotIncluded } = useCommon()
 const $store = useStore()
@@ -307,13 +312,12 @@ const computedShardsList = computed(() => {
 })
 
 let isIndeterminate = ref(true)
-const handleCheckAllChange = function (val: boolean) {
+const handleCheckAllChange = function (val: CheckboxValueType) {
   checkList.value = val ? rarityList.value.map((item) => item.value) : []
   isIndeterminate.value = false
 }
-
 let checkAll = ref(false)
-const handleCheckedRarityChange = function (value: string[]) {
+const handleCheckedRarityChange = function (value: CheckboxValueType[]) {
   checkAll.value = value.length === rarityList.value.length
   isIndeterminate.value =
     value.length > 0 && value.length < rarityList.value.length

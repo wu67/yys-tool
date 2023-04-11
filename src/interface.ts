@@ -138,8 +138,8 @@ export interface IHero extends IBaseHero {
    * 持有量。所有账号共计
    */
   holdings: number
-  /** 
-   * 召唤所需数量 
+  /**
+   * 召唤所需数量
    **/
   bookMaxShards: number
 }
@@ -153,3 +153,5 @@ export interface hero_book_shards {
   hero_id: number
   shards: number
 }
+
+export type CheckboxValueType = string | number | boolean
