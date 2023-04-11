@@ -24,7 +24,7 @@
         style="display: none"
         accept="application/json"
         @change="($event) => onUserDataInput($event, -1)"
-      >
+      />
     </div>
 
     <div class="flex wrap">
@@ -59,7 +59,7 @@
               style="display: none"
               accept="application/json"
               @change="($event) => onUserDataInput($event, index)"
-            >
+            />
           </div>
         </template>
 
@@ -93,7 +93,7 @@
               }}&nbsp;抽
             </div>
           </div>
-          <br>
+          <br />
           <div class="flex">
             <div class="resources-key">魂玉</div>
             <div class="resources-value">
@@ -173,7 +173,7 @@
             </div>
           </div>
 
-          <br>
+          <br />
           <div class="flex start">
             <div class="resources-key">导出时间</div>
             <div

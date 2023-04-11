@@ -253,7 +253,7 @@
               <div
                 v-if="
                   scope.row.single_attrs.length > 0 &&
-                    scope.row.single_attrs[0].type === attr.key
+                  scope.row.single_attrs[0].type === attr.key
                 "
                 class="attr-value fixed-value"
               >

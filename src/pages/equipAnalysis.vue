@@ -72,7 +72,7 @@
               v-if="equip.id > 0"
               :src="getImageURL(equip.id)"
               class="background"
-            >
+            />
             <div>{{ equip.name }}</div>
           </div>
         </template>
@@ -131,8 +131,8 @@
             <template
               v-if="
                 p.length > 1 &&
-                  ((pIndex !== 1 && p[1].value > 15) ||
-                    (pIndex === 1 && p[1].value > 57 + 15))
+                ((pIndex !== 1 && p[1].value > 15) ||
+                  (pIndex === 1 && p[1].value > 57 + 15))
               "
             >
               <el-tooltip
@@ -140,12 +140,12 @@
                 placement="top"
                 :content="
                   '2速 主' +
-                    allAttrMap[`${p[1].mainAttr.type}`] +
-                    ', ' +
-                    (pIndex === 1
-                      ? (p[1].value - 57).toFixed(2)
-                      : p[1].value.toFixed(2)) +
-                    '速'
+                  allAttrMap[`${p[1].mainAttr.type}`] +
+                  ', ' +
+                  (pIndex === 1
+                    ? (p[1].value - 57).toFixed(2)
+                    : p[1].value.toFixed(2)) +
+                  '速'
                 "
               >
                 <div
@@ -176,8 +176,8 @@
             <template
               v-if="
                 p.length > 2 &&
-                  ((pIndex !== 1 && p[2].value > 15) ||
-                    (pIndex === 1 && p[2].value > 57 + 15))
+                ((pIndex !== 1 && p[2].value > 15) ||
+                  (pIndex === 1 && p[2].value > 57 + 15))
               "
             >
               <el-tooltip
@@ -185,12 +185,12 @@
                 placement="top"
                 :content="
                   '3速 主' +
-                    allAttrMap[`${p[2].mainAttr.type}`] +
-                    ', ' +
-                    (pIndex === 1
-                      ? (p[2].value - 57).toFixed(2)
-                      : p[2].value.toFixed(2)) +
-                    '速'
+                  allAttrMap[`${p[2].mainAttr.type}`] +
+                  ', ' +
+                  (pIndex === 1
+                    ? (p[2].value - 57).toFixed(2)
+                    : p[2].value.toFixed(2)) +
+                  '速'
                 "
               >
                 <template>
@@ -370,13 +370,16 @@ const initData = function (attrName = 'Speed') {
   })
   aData.value.unshift(scatteredSuitData)
   // 散件总速度计算
-  scatteredSuit.value = scatteredSuitData.position.reduce((total: number[], current) => {
-    total[0] = (current[0].value || 0) + (total[0] || 0)
-    total[1] = (current[1].value || 0) + (total[1] || 0)
-    total[2] = (current[2].value || 0) + (total[2] || 0)
+  scatteredSuit.value = scatteredSuitData.position.reduce(
+    (total: number[], current) => {
+      total[0] = (current[0].value || 0) + (total[0] || 0)
+      total[1] = (current[1].value || 0) + (total[1] || 0)
+      total[2] = (current[2].value || 0) + (total[2] || 0)
 
-    return total
-  }, [])
+      return total
+    },
+    [],
+  )
   setTimeout(function () {
     loading.value = false
   }, 500)

@@ -25,5 +25,7 @@ module.exports = {
     'vue/no-lone-template': 0,
     'vue/singleline-html-element-content-newline': 0,
     'vue/valid-attribute-name': 0,
+    'vue/html-self-closing': 0,
+    'vue/html-indent': 0,
   },
 }
