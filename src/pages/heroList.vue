@@ -172,7 +172,8 @@ export default defineComponent({
 </script>
 <script lang="ts" setup>
 import { defineComponent, ref, unref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useIndexStore } from '@/stores'
+import { useUserStore } from '@/stores/user'
 import {
   ElButton,
   ElCheckboxGroup,
@@ -191,10 +192,12 @@ import {
 } from '@/interface'
 
 const { updateUserNotIncluded, getNotIncluded } = useCommon()
-const $store = useStore()
-const allHeroList = computed(() => $store.state.allHeroList)
-const notIncludedList = computed(() => $store.state.notIncludedList)
-const userList = computed(() => $store.state.user.list)
+
+const $userStore = useUserStore()
+const $indexStore = useIndexStore()
+const allHeroList = computed(() => $indexStore.allHeroList)
+const notIncludedList = computed(() => $indexStore.notIncludedList)
+const userList = computed(() => $userStore.list)
 
 const rarityList = ref([
   {
@@ -226,7 +229,7 @@ const rarityList = ref([
     value: 'INTERACTIVE',
   },
 ])
-let shards = ref([])
+let shards = ref([] as IHero[])
 type HeroList = number[]
 let heroIdList = ref<HeroList[]>([])
 const getShards = function () {
@@ -343,7 +346,7 @@ const setNotIncluded = function (userIndex: number) {
 }
 
 const changeNotIncluded = function (newCheckedData: number[]) {
-  $store.commit('updateNotIncluded', {
+  $indexStore.updateNotIncluded({
     index: currentEditNotIncludedUserIndex.value,
     value: newCheckedData,
   })

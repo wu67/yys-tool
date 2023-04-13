@@ -27,7 +27,7 @@
         </el-tooltip>
       </div>
       <el-tabs
-        v-if="userList.length > 1"
+        v-show="userList.length > 1"
         v-model="currentUser"
         type="card"
         @tab-click="changeUser"
@@ -234,7 +234,8 @@ export default defineComponent({
 
 <script lang="ts" setup>
 import { defineComponent, ref, unref, computed, nextTick } from 'vue'
-import { useStore } from 'vuex'
+import { useIndexStore } from '@/stores'
+import { useUserStore } from '@/stores/user'
 import util from '@/utils/index'
 import { ElCard, ElTabs, ElTabPane, ElTag, ElTooltip } from 'element-plus'
 import { IEquipCustom, SubAttr, IEquipTypePrototype } from '@/interface'
@@ -254,11 +255,11 @@ const changeUser = function () {
 const getImageURL = function (suitCode: number) {
   return new URL(`/src/assets/suit_icon/${suitCode}.png`, import.meta.url).href
 }
-
-const $store = useStore()
-const equipList = computed(() => $store.state.equipList)
-const allAttrMap = computed(() => $store.getters.allAttrMap)
-const userList = computed(() => $store.getters['user/list'])
+const $userStore = useUserStore()
+const $indexStore = useIndexStore()
+const equipList = computed(() => $indexStore.equipList)
+const userList = computed(() => $userStore.computedList)
+const allAttrMap = computed(() => $indexStore.allAttrMap)
 // 重点套装 版本之子
 const importantSuit = ref([
   300002, 300010, 300012, 300019, 300021, 300023, 300034, 300079, 300080,

@@ -29,7 +29,7 @@
 
     <div class="flex wrap">
       <el-card
-        v-for="(userItem, index) in user.list"
+        v-for="(userItem, index) in user"
         :key="index"
         class="user-card"
       >
@@ -191,7 +191,7 @@
           </div>
         </div>
       </el-card>
-      <say-goodbye v-if="user.list.length < 1" />
+      <say-goodbye v-if="user.length < 1" />
     </div>
   </div>
 </template>
@@ -204,10 +204,11 @@ export default defineComponent({
 
 <script lang="ts" setup>
 import { computed, defineComponent, unref } from 'vue'
-import { useStore } from 'vuex'
 import useCommon from '@/useCommon'
 import { ElMessageBox, ElMessage, ElCard, ElButton } from 'element-plus'
 import sayGoodbye from '@/components/goodbye.vue'
+import { useIndexStore } from '@/stores'
+import { useUserStore } from '@/stores/user'
 
 const {
   commonNotIncluded,
@@ -218,8 +219,9 @@ const {
   updateUserNotIncluded,
 } = useCommon()
 
-const $store = useStore()
-const user = computed(() => $store.state.user)
+const $userStore = useUserStore()
+const $indexStore = useIndexStore()
+const user = computed(() => $userStore.list)
 
 const onUserDataInput = (e: any, index: number) => {
   const files = e.target.files || e.dataTransfer.files
@@ -238,15 +240,15 @@ const onUserDataInput = (e: any, index: number) => {
     const newID = newUserData.data.player.id
     let newUserIndex = index
 
-    user.value.list.forEach((userItem: any, currentIndex: number) => {
+    user.value.forEach((userItem: any, currentIndex: number) => {
       if (userItem.data.player.id === newID) {
         // 说明该ID已经在数据库中了, 此时不是新增, 而应是更新
         newUserIndex = currentIndex
       }
     })
 
-    // 写入vuex
-    $store.commit('user/updateUserDataByIndex', {
+    // 写入pinia
+    $userStore.updateUserDataByIndex({
       index: newUserIndex,
       value: newUserData,
     })
@@ -256,7 +258,7 @@ const onUserDataInput = (e: any, index: number) => {
 
     if (newUserIndex === -1) {
       // 不是新增用户数据的话，不必更新未收录数据
-      $store.commit('updateNotIncluded', {
+      $indexStore.updateNotIncluded({
         index: index,
         value: commonNotIncluded,
       })

@@ -335,7 +335,6 @@ export default defineComponent({
 
 <script lang="ts" setup>
 import { defineComponent, ref, nextTick, computed, watch } from 'vue'
-import { useStore } from 'vuex'
 import {
   ElCheckboxGroup,
   ElCheckbox,
@@ -351,6 +350,8 @@ import {
 } from 'element-plus'
 import util from '@/utils/index'
 import useCommon from '../useCommon'
+import { useIndexStore } from '@/stores'
+import { useUserStore } from '@/stores/user'
 import {
   IEquipAttrPrototype,
   IEquipCustom,
@@ -358,11 +359,12 @@ import {
 } from '@/interface'
 
 const { formatTime } = useCommon()
-const $store = useStore()
-const equipMap = computed(() => $store.getters.equipMap)
-const effectiveAttrList = computed(() => $store.getters.effectiveAttrList)
-const equipList = computed(() => $store.state.equipList)
-const allAttrMap = computed(() => $store.getters.allAttrMap)
+const $userStore = useUserStore()
+const $indexStore = useIndexStore()
+const equipMap = computed(() => $indexStore.equipMap)
+const effectiveAttrList = computed(() => $indexStore.effectiveAttrList)
+const equipList = computed(() => $indexStore.equipList)
+const allAttrMap = computed(() => $indexStore.allAttrMap)
 
 const transAttrToName = function (attr: string) {
   return allAttrMap.value[attr]
@@ -389,7 +391,7 @@ const changeUser = function () {
   })
 }
 
-const allAttrList = computed(() => $store.getters.allAttrList)
+const allAttrList = computed(() => $indexStore.allAttrList)
 let checkAttrList = ref(
   allAttrList.value.map((item: IEquipAttrPrototype) => item.key),
 )
@@ -515,7 +517,8 @@ let currentUser = ref('0')
 let equipTableRef = ref()
 let randomAttrsLengthFilter = ref('')
 let checkEquipType = ref()
-const userList = computed(() => $store.getters['user/list'])
+const userList = computed(() => $userStore.computedList)
+
 const initData = function () {
   const data = userList.value[parseInt(currentUser.value)].data
 

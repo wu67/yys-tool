@@ -1,13 +1,15 @@
 import Dexie from 'dexie'
 import $db from './db'
-import { useStore } from 'vuex'
 import { reactive } from 'vue'
 import $dayjs from 'dayjs'
+import { useIndexStore } from '@/stores'
+import { useUserStore } from '@/stores/user'
 
 export default function useCommon() {
   let db = $db
 
-  const $store = useStore()
+  const $userStore = useUserStore()
+  const $indexStore = useIndexStore()
 
   const commonNotIncluded = reactive([
     360, 359, 337, 336, 319, 313, 314, 310, 309, 308, 305, 294, 373,
@@ -39,7 +41,7 @@ export default function useCommon() {
         result.push(user.content)
       })
       .then(() => {
-        $store.commit('user/updateUserDataByIndex', {
+        $userStore.updateUserDataByIndex({
           index: -2,
           value: result,
         })
@@ -76,19 +78,18 @@ export default function useCommon() {
       })
     }
   }
-  const getNotIncluded = () => {
+  const getNotIncluded = async () => {
     let result: number[][] = []
-    return db.not_included
-      .each((record: any) => {
-        result.push(record.content)
-      })
-      .then(() => {
-        $store.commit('updateNotIncluded', {
-          index: -2,
-          value: result,
-        })
-        return result
-      })
+    await db.not_included.each((record: any) => {
+      result.push(record.content)
+    })
+
+    await $indexStore.updateNotIncluded({
+      index: -2,
+      value: result,
+    })
+
+    return result
   }
   return {
     db,

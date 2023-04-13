@@ -9,7 +9,7 @@ export interface IEquipTypePrototype {
   /**
    * 有效属性. 作者根据目前版本的理解自行定义的. 位于assets/equip.json
    */
-  effectiveAttr: string[]
+  effectiveAttr?: string[]
 }
 
 /**

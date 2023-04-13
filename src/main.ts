@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './route'
-import store from './store/index'
+import { createPinia } from 'pinia'
 
 const app = createApp(App)
 app.use(router)
-app.use(store)
+app.use(createPinia())
 
 import { ElLoading } from 'element-plus'
 app.use(ElLoading)

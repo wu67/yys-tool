@@ -28,19 +28,15 @@ export default defineComponent({
 })
 </script>
 
-<script
-  lang="ts"
-  setup
->
+<script lang="ts" setup>
 import { defineComponent, ref } from 'vue'
 import useCommon from './useCommon'
-import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import { ElConfigProvider, ElMenu, ElMenuItem, ElMessage } from 'element-plus'
-
+import { useIndexStore } from './stores'
 const { getUserData } = useCommon()
-const $store = useStore()
+const $indexStore = useIndexStore()
 const $route = useRoute()
 const $router = useRouter()
 
@@ -74,8 +70,8 @@ const navList = ref([
   },
 ])
 
-$store.dispatch('getAllHeroData')
-$store.dispatch('getEquipData')
+$indexStore.getAllHeroData()
+$indexStore.getEquipData()
 
 const loading = ref(true)
 getUserData().then((userList) => {
