@@ -15,9 +15,17 @@ export default defineConfig(({ mode }) => {
         '@': '/src/',
       },
     },
-    plugins: [
-      vue(),
-      eslintPlugin(),
-    ],
+    css: {
+      devSourcemap: true,
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import '@/assets/css/flex-custom.scss';@import '@/assets/css/border-box.scss';`,
+        },
+      },
+    },
+    plugins: [vue(), eslintPlugin()],
+    build: {
+      reportCompressedSize: false,
+    },
   }
 })

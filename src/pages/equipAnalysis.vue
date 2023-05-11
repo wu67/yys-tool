@@ -401,8 +401,6 @@ initData()
 }
 </style>
 <style lang="scss" scoped>
-@import '@/assets/css/flex-custom.scss';
-@import '@/assets/css/border-box.scss';
 .page-equip-analysis {
   padding: 0 0 20px 16px;
   height: 100%;

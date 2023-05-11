@@ -331,8 +331,6 @@ const calcDrawCount = (jade: number, amulet: number) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/flex-custom.scss';
-@import '@/assets/css/border-box.scss';
 .page-userData {
   padding: 10px 40px 20px;
   height: 100%;

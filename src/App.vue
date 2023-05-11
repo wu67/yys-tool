@@ -123,8 +123,6 @@ body {
 </style>
 
 <style lang="scss" scoped>
-@import '@/assets/css/flex-custom.scss';
-@import '@/assets/css/border-box.scss';
 .menu-wrap {
   padding: 0 calc((100% - 1600px) / 2);
   background-color: #545c64;

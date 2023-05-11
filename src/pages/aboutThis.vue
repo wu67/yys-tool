@@ -46,7 +46,6 @@
 import sayGoodbye from '@/components/goodbye.vue'
 </script>
 <style lang="scss" scoped>
-@import '@/assets/css/border-box.scss';
 .page-about {
   padding: 10px 40px 20px;
   height: 100%;

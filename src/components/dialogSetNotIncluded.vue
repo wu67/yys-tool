@@ -112,6 +112,4 @@ const save = () => {
 }
 </style>
 <style lang="scss" scoped>
-@import '@/assets/css/flex-custom.scss';
-@import '@/assets/css/border-box.scss';
 </style>

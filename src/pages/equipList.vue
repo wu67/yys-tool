@@ -557,8 +557,6 @@ initData()
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/css/flex-custom.scss';
-@import '@/assets/css/border-box.scss';
 .page-equip-list {
   padding: 0 0 20px;
   height: 100%;
