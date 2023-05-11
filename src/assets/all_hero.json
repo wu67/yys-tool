@@ -2,11 +2,13 @@
   {
     "name": "神乐&定春",
     "level": "SSR",
+    "interactive": true,
     "id": 500
   },
   {
     "name": "坂田银时",
     "level": "SSR",
+    "interactive": true,
     "id": 397
   },
   {
