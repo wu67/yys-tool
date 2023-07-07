@@ -25,7 +25,23 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [vue(), eslintPlugin()],
     build: {
+      // 设置最终构建的浏览器兼容目标
+      target: 'es2015',
+      // 构建后是否生成 source map 文件
+      // sourcemap: mode !== 'production',
+      // 禁用则将css合并为单文件
+      cssCodeSplit: false,
+      // chunk 大小警告的限制（以 kbs 为单位）
+      chunkSizeWarningLimit: 1000,
       reportCompressedSize: false,
+      // 当前没必要. tree shaking工作得很好.
+      // rollupOptions: {
+      //   output: {
+      //     manualChunks: {
+      //       element: ['element-plus'],
+      //     },
+      //   },
+      // },
     },
   }
 })

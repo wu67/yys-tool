@@ -6,7 +6,7 @@
   "semi": false,
   "trailingComma": "all",
   "bracketSpacing": true,
-  "htmlWhitespaceSensitivity": "ignore",
+  "htmlWhitespaceSensitivity": "css",
   "singleAttributePerLine": true,
   "vueIndentScriptAndStyle": false
 }
