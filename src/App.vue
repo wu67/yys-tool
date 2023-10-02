@@ -32,7 +32,7 @@ export default defineComponent({
 import { defineComponent, ref } from 'vue'
 import useCommon from './useCommon'
 import { useRoute, useRouter } from 'vue-router'
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { ElConfigProvider, ElMenu, ElMenuItem, ElMessage } from 'element-plus'
 import { useIndexStore } from './stores'
 const { getUserData } = useCommon()
