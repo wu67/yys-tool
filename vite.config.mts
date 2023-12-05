@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import eslintPlugin from 'vite-plugin-eslint'
+import eslintPlugin from '@nabla/vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -23,7 +23,10 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-    plugins: [vue(), eslintPlugin()],
+    plugins: [
+      vue({ template: { compilerOptions: { hoistStatic: false } } }),
+      eslintPlugin(),
+    ],
     build: {
       // 设置最终构建的浏览器兼容目标
       target: 'es2015',
