@@ -1,8 +1,6 @@
-import NZH from 'nzh'
-
 export default {
   transNumberToChinese(num: number) {
-    return NZH.cn.encodeS(num)
+    return ['零', '一', '二', '三', '四', '五', '六', '七'][num]
   },
   multiply(value: number, ratio = 100) {
     return parseFloat((value * ratio).toPrecision(12))
