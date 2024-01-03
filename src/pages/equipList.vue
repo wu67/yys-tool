@@ -14,10 +14,10 @@
       />
     </el-tabs>
     <div
-      class="flex between"
+      class="flex justify-between"
       style="margin-bottom: 8px"
     >
-      <div class="flex">
+      <div class="flex items-center">
         <div>主属性：</div>
         <el-checkbox
           v-model="checkAllAttr"
@@ -54,10 +54,10 @@
       </el-tooltip>
     </div>
     <div
-      class="flex"
+      class="flex items-center"
       style="margin-bottom: 8px"
     >
-      <div class="flex">
+      <div class="flex items-center">
         <div>等级：</div>
         <el-checkbox
           v-model="checkAllLevel"
@@ -83,10 +83,10 @@
       </div>
     </div>
     <div
-      class="flex"
+      class="flex items-center"
       style="margin-bottom: 8px"
     >
-      <div class="flex">
+      <div class="flex items-center">
         <div>位置：</div>
         <el-checkbox
           v-model="checkAllPosition"
@@ -111,7 +111,7 @@
         </el-checkbox-group>
       </div>
       <div
-        class="flex"
+        class="flex items-center"
         style="margin-left: 60px"
       >
         <div>种类：</div>
@@ -132,7 +132,7 @@
         </el-select>
       </div>
       <div
-        class="flex"
+        class="flex items-center"
         style="margin-left: 40px"
       >
         <div>副属性：</div>
@@ -199,7 +199,7 @@
           fixed="left"
         >
           <template #default="scope">
-            <div class="flex attr-name">
+            <div class="attr-name flex items-center">
               <div class="main">
                 {{ transAttrToName(scope.row.mainAttr.type) }}
               </div>
@@ -225,10 +225,10 @@
           :prop="attr.key"
         >
           <template #default="scope">
-            <div class="flex relative">
+            <div class="relative flex items-center">
               <div
                 v-show="pageSize > 20"
-                class="absolute attr-nick"
+                class="attr-nick absolute"
               >
                 {{ attr.nick }}
               </div>
@@ -315,7 +315,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="flex center pagination-wrap">
+    <div class="pagination-wrap flex justify-center">
       <el-pagination
         v-model:currentPage="currentPage"
         v-model:pageSize="pageSize"

@@ -9,7 +9,7 @@
       @change-not-included="changeNotIncluded"
     />
     <div
-      class="flex between"
+      class="flex justify-between"
       style="margin-bottom: 8px"
     >
       <div>
@@ -88,7 +88,7 @@
           :label="`${user.data.player.name}`"
         >
           <template #header>
-            <div class="flex center">
+            <div class="flex justify-center">
               <div>{{ user.data.player.name }}</div>
               &nbsp;
               <div

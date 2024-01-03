@@ -1,7 +1,7 @@
 <template>
   <div class="page-equip-analysis">
     <div class="content-top">
-      <div class="flex baseline">
+      <div class="flex items-baseline">
         <h2>满速套装分析</h2>
         <div style="font-size: 12px; color: #999; margin: 0 10px">
           用于分析某一套装的速度短板，方便赌魂/爆肝
@@ -38,7 +38,7 @@
           :label="u.data.player.name"
         />
       </el-tabs>
-      <div class="flex center extendCountArea">
+      <div class="extendCountArea flex justify-center">
         <div
           v-for="(suit, suitIndex) in scatteredSuit"
           :key="suitIndex"
@@ -57,7 +57,7 @@
     </div>
     <div
       v-loading="loading"
-      class="flex wrap"
+      class="flex flex-wrap"
     >
       <el-card
         v-for="(equip, equipIndex) in aData"
@@ -67,7 +67,7 @@
         shadow="hover"
       >
         <template #header>
-          <div class="flex suit-name-wrap">
+          <div class="suit-name-wrap flex items-center">
             <img
               v-if="equip.id > 0"
               :src="getImageURL(equip.id)"
@@ -81,7 +81,7 @@
           :key="pIndex"
           class="position"
         >
-          <div class="flex analysis-item">
+          <div class="analysis-item flex items-center">
             <div>位置{{ transNumberToChinese(pIndex + 1) }}&nbsp;</div>
             <div
               v-if="p.length > 0"

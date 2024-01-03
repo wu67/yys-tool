@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
       devSourcemap: true,
       preprocessorOptions: {
         scss: {
-          additionalData: `@import '@/assets/css/flex-custom.scss';@import '@/assets/css/border-box.scss';`,
+          additionalData: `@import '@/assets/css/border-box.scss';`,
         },
       },
     },

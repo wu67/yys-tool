@@ -13,7 +13,7 @@
         :titles="['已收录', '未收录']"
         filterable
       />
-      <div class="flex center">
+      <div class="flex justify-center">
         <el-button
           type="primary"
           @click="save"
@@ -71,7 +71,7 @@ const allData: IAllData[] = unref(props.allHeroList).map((hero: any) => {
   return {
     key: hero.id,
     label: hero.name,
-    disabled: false
+    disabled: false,
   }
 })
 
@@ -111,5 +111,4 @@ const save = () => {
   }
 }
 </style>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
