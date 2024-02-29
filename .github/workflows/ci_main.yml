@@ -21,17 +21,17 @@ jobs:
       - name: checkout code
         uses: actions/checkout@main
 
-      - name: actions/setup-node@v3
-        uses: actions/setup-node@v3
+      - name: actions/setup-node
+        uses: actions/setup-node@v4
         with:
-          node-version: "20.10.0"
+          node-version: "20.11.1"
 
       - name: npm_run_build
         run: |
           npm i && npm run build
 
       - name: upload files
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           name: build-dist
           path: dist
@@ -46,6 +46,6 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
         with:
           artifact_name: build-dist
