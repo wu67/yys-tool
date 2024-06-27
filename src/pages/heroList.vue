@@ -16,6 +16,7 @@
         <el-checkbox
           v-model="checkAll"
           label="all"
+          value="all"
           :indeterminate="isIndeterminate"
           @change="handleCheckAllChange"
         >
@@ -29,6 +30,7 @@
             v-for="item in rarityList"
             :key="item.value"
             :label="item.value"
+            :value="item.value"
           >
             {{ item.name }}
           </el-checkbox>

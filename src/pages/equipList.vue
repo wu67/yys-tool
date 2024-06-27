@@ -22,6 +22,7 @@
         <el-checkbox
           v-model="checkAllAttr"
           label="all"
+          value="all"
           :indeterminate="isIndeterminateAllAttr"
           @change="handleCheckAllAttrChange"
         >
@@ -36,6 +37,7 @@
             v-for="item in allAttrList"
             :key="item.key"
             :label="item.key"
+            :value="item.key"
           >
             {{ item.name }}
           </el-checkbox>
@@ -62,6 +64,7 @@
         <el-checkbox
           v-model="checkAllLevel"
           label="all"
+          value="all"
           :indeterminate="isIndeterminateAllLevel"
           @change="handleCheckAllLevelChange"
         >
@@ -76,6 +79,7 @@
             v-for="item in 16"
             :key="item - 1"
             :label="item - 1"
+            :value="item - 1"
           >
             {{ item - 1 }}级
           </el-checkbox>
@@ -91,6 +95,7 @@
         <el-checkbox
           v-model="checkAllPosition"
           label="all"
+          value="all"
           :indeterminate="isIndeterminateAllPosition"
           @change="handleCheckAllPositionChange"
         >
@@ -105,6 +110,7 @@
             v-for="item in 6"
             :key="item"
             :label="item - 1"
+            :value="item - 1"
           >
             {{ transNumberToChinese(item) }}号位
           </el-checkbox>
@@ -118,6 +124,7 @@
         <el-select
           v-if="equipList"
           v-model="checkEquipType"
+          style="width: 160px"
           clearable
           placeholder="可选择过滤种类"
           no-data-text="全部"
@@ -138,8 +145,9 @@
         <div>副属性：</div>
         <el-select
           v-model="randomAttrsLengthFilter"
+          style="width: 160px"
           clearable
-          placeholder="可选则副属性数量"
+          placeholder="可选择副属性数量"
           no-data-text="全部"
           @change="initData"
         >
