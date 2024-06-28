@@ -10,6 +10,12 @@
     "name": "龙吟铃鹿御前"
   },
   {
+    "id": 567,
+    "level": "SSR",
+    "interactive": true,
+    "name": "申屠子夜"
+  },
+  {
     "id": 566,
     "level": "SP",
     "name": "晨晖惠比寿"
@@ -17,11 +23,13 @@
   {
     "id": 564,
     "level": "SSR",
+    "interactive": true,
     "name": "镜音铃·连"
   },
   {
     "id": 563,
     "level": "SSR",
+    "interactive": true,
     "name": "初音未来"
   },
   {
