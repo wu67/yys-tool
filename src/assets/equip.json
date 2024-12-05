@@ -349,5 +349,20 @@
     "id": 300090,
     "effectiveAttr": ["Speed", "DefenseRate"],
     "name": "钓瓶火"
+  },
+  {
+    "id": 300091,
+    "effectiveAttr": ["Speed", "EffectHitRate"],
+    "name": "夜荒魂"
+  },
+  {
+    "id": 300092,
+    "effectiveAttr": ["Speed", "CritPower", "AttackRate", "CritRate"],
+    "name": "无刀取"
+  },
+  {
+    "id": 300093,
+    "effectiveAttr": ["Speed", "DefenseRate", "HpRate"],
+    "name": "奉海图"
   }
 ]
