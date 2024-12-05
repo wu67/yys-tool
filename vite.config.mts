@@ -19,7 +19,8 @@ export default defineConfig(({ mode }) => {
       devSourcemap: true,
       preprocessorOptions: {
         scss: {
-          additionalData: `@import '@/assets/css/border-box.scss';`,
+          api: 'modern',
+          additionalData: `@use '@/assets/css/border-box.scss';`,
         },
       },
     },
@@ -29,7 +30,7 @@ export default defineConfig(({ mode }) => {
     ],
     build: {
       // 设置最终构建的浏览器兼容目标
-      target: 'es2015',
+      target: 'es2020',
       // 构建后是否生成 source map 文件
       // sourcemap: mode !== 'production',
       // 禁用则将css合并为单文件

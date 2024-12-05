@@ -3,7 +3,7 @@ services:
   yys_tool:
     # restart: always
     container_name: yys_tool
-    image: "node:20.10.0-slim"
+    image: "node:22.11.0-slim"
     command: bash -c "npm --registry=https://registry.npmmirror.com install && npm run dev"
     working_dir: /var/local
     volumes:
@@ -15,7 +15,7 @@ services:
       - MODE=dev
   # yys_tool_nginx:
   #   restart: always
-  #   image: "nginx:1.24.0"
+  #   image: "nginx:1.26.2"
   #   ports:
   #     - "8889:80"
   #   volumes:
