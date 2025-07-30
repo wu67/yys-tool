@@ -8,9 +8,7 @@ import {
   IEquipAttrPrototype,
 } from '@/interface'
 
-export const useIndexStore = defineStore({
-  id: 'index',
-
+export const useIndexStore = defineStore('index', {
   state: () => ({
     equipList: [] as IEquipTypePrototype[],
     allHeroList: [] as any[],

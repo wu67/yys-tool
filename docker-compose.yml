@@ -3,7 +3,7 @@ services:
   yys_tool:
     # restart: always
     container_name: yys_tool
-    image: "node:22.11.0-slim"
+    image: "node:22.17.1-slim"
     command: bash -c "npm --registry=https://registry.npmmirror.com install && npm run dev"
     working_dir: /var/local
     volumes:

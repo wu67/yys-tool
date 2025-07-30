@@ -4,8 +4,7 @@ import { IEquip, SubAttr, IEquipCustom } from '@/interface'
 import util from '@/utils/index'
 import { useIndexStore } from '@/stores/index'
 
-export const useUserStore = defineStore({
-  id: 'user',
+export const useUserStore = defineStore('user', {
   state: () => ({
     list: [],
   }),

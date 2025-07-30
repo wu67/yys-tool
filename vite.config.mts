@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import eslintPlugin from '@nabla/vite-plugin-eslint'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -19,14 +19,13 @@ export default defineConfig(({ mode }) => {
       devSourcemap: true,
       preprocessorOptions: {
         scss: {
-          api: 'modern',
-          additionalData: `@use '@/assets/css/border-box.scss';`,
+          // additionalData: `@use '@/assets/css/border-box.scss';`,
         },
       },
     },
     plugins: [
       vue({ template: { compilerOptions: { hoistStatic: false } } }),
-      eslintPlugin(),
+      tailwindcss(),
     ],
     build: {
       // 设置最终构建的浏览器兼容目标
@@ -36,7 +35,7 @@ export default defineConfig(({ mode }) => {
       // 禁用则将css合并为单文件
       cssCodeSplit: false,
       // chunk 大小警告的限制（以 kbs 为单位）
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 1500,
       reportCompressedSize: false,
       // 当前没必要. tree shaking工作得很好.
       // rollupOptions: {
